@@ -43,7 +43,7 @@ defmodule HelloWeb do
         layouts: [html: HelloWeb.Layouts]
 
       import Plug.Conn
-      import HelloWeb.Gettext
+      use Gettext, backend: HelloWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -85,7 +85,7 @@ defmodule HelloWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import HelloWeb.CoreComponents
-      import HelloWeb.Gettext
+      use Gettext, backend: Hello.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

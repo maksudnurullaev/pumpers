@@ -16,8 +16,8 @@ defmodule HelloWeb.CoreComponents do
   """
   use Phoenix.Component
 
-  # OLD - import HelloWeb.Gettext
-  use Gettext, backend: Hello.Gettext
+  # OLD - use Gettext, backend: Hello.Gettext
+  use Gettext, backend: HelloWeb.Gettext
 
   alias Phoenix.LiveView.JS
 
