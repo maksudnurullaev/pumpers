@@ -1,5 +1,6 @@
 defmodule HelloWeb.Router do
   use HelloWeb, :router
+  use HelloWeb, :verified_routes
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -8,6 +9,7 @@ defmodule HelloWeb.Router do
     plug :put_root_layout, html: {HelloWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug HelloWeb.Plugs.Locale, "en"
   end
 
   pipeline :api do
@@ -18,12 +20,9 @@ defmodule HelloWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/hello", HelloController, :index
+    get "/hello/:messenger", HelloController, :show
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", HelloWeb do
-  #   pipe_through :api
-  # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:hello, :dev_routes) do
