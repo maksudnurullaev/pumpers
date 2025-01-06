@@ -1,4 +1,4 @@
-# Hello
+# Pumpers(Elixir)
 
 To start your Phoenix server:
 
