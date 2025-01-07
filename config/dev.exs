@@ -1,8 +1,8 @@
 import Config
 
 # Configure your database
-config :hello, Hello.Repo,
-  database: Path.expand("../db/hello_dev.db", __DIR__),
+config :pumpers, Pumpers.Repo,
+  database: Path.expand("../db/pumpers_dev.db", __DIR__),
   pool_size: 5,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true
@@ -13,7 +13,7 @@ config :hello, Hello.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
-config :hello, HelloWeb.Endpoint,
+config :pumpers, PumpersWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
@@ -22,8 +22,8 @@ config :hello, HelloWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "wF+0zaf6FocNHD0XDA59gf0NoYsCAYcVWfQ8EcV3sJ/O30HymR8FNPHJmRtRdNJZ",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:hello, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:hello, ~w(--watch)]}
+    esbuild: {Esbuild, :install_and_run, [:pumpers, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:pumpers, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -50,17 +50,17 @@ config :hello, HelloWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :hello, HelloWeb.Endpoint,
+config :pumpers, PumpersWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/hello_web/(controllers|live|components)/.*(ex|heex)$"
+      ~r"lib/pumpers_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :hello, dev_routes: true
+config :pumpers, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"

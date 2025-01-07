@@ -1,4 +1,4 @@
-defmodule Hello.DataCase do
+defmodule Pumpers.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -10,7 +10,7 @@ defmodule Hello.DataCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use Hello.DataCase, async: true`, although
+  by setting `use Pumpers.DataCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -18,17 +18,17 @@ defmodule Hello.DataCase do
 
   using do
     quote do
-      alias Hello.Repo
+      alias Pumpers.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Hello.DataCase
+      import Pumpers.DataCase
     end
   end
 
   setup tags do
-    Hello.DataCase.setup_sandbox(tags)
+    Pumpers.DataCase.setup_sandbox(tags)
     :ok
   end
 
@@ -36,7 +36,7 @@ defmodule Hello.DataCase do
   Sets up the sandbox based on the test tags.
   """
   def setup_sandbox(tags) do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(Hello.Repo, shared: not tags[:async])
+    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(Pumpers.Repo, shared: not tags[:async])
     on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
   end
 
