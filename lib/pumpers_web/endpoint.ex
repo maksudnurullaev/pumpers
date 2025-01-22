@@ -1,4 +1,5 @@
 defmodule PumpersWeb.Endpoint do
+  alias PumpersWeb.Plugs.PumpRequest
   use Phoenix.Endpoint, otp_app: :pumpers
 
   # The session will be stored in the cookie and signed,
@@ -49,18 +50,9 @@ defmodule PumpersWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug :introspect
+  # plug :introspect
+  plug PumpRequest, "#{NaiveDateTime.add(NaiveDateTime.utc_now(), +5, :hour)}"
   plug PumpersWeb.Router
 
-  def introspect(conn, _opts) do
-    IO.puts("""
-    Verb: #{inspect(conn.method)}
-    Host: #{inspect(conn.host)}
-    Time: #{DateTime.utc_now()}
-    """)
 
-    #    Headers: #{inspect(conn.req_headers)}
-
-    conn
-  end
 end

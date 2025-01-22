@@ -19,7 +19,7 @@ defmodule PumpersWeb.Router do
   scope "/", PumpersWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    get "/", PumpersController, :home
     get "/hello", PumpersController, :index
     get "/hello/:messenger", PumpersController, :show
   end
