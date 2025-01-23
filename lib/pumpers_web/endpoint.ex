@@ -53,6 +53,4 @@ defmodule PumpersWeb.Endpoint do
   # plug :introspect
   plug PumpRequest, "#{NaiveDateTime.add(NaiveDateTime.utc_now(), +5, :hour)}"
   plug PumpersWeb.Router
-
-
 end
