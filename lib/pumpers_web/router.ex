@@ -24,9 +24,6 @@ defmodule PumpersWeb.Router do
     get "/hello/:messenger", PumpersController, :show
   end
 
-  alias PumpersWeb.NotFound
-  match(:*, "/*funny_path", NotFound, :not_found)
-
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:pumpers, :dev_routes) do
     # If you want to use the LiveDashboard in production, you should put
@@ -43,4 +40,7 @@ defmodule PumpersWeb.Router do
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
+
+  alias PumpersWeb.NotFound
+  match(:*, "/*funny_path", NotFound, :not_found)
 end
