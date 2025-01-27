@@ -3,7 +3,7 @@ defmodule PumpersWeb.LogsController do
 
   def index(conn, _params) do
     conn
-    |> put_layout(html: :logs)
+    # |> put_layout(html: :logs)
     |> render(:index)
   end
 

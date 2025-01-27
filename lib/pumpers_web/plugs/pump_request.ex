@@ -23,7 +23,7 @@ defmodule PumpersWeb.Plugs.PumpRequest do
   end
 
   defp save_req_main(conn, oid) do
-    alias Pumpers.{Repo, Object}
+    alias Pumpers.{Repo, Log}
 
     assign(conn, :oid, oid)
 
@@ -33,7 +33,7 @@ defmodule PumpersWeb.Plugs.PumpRequest do
         else: conn.request_path
       )
 
-    o = %Object{
+    o = %Log{
       name: "REQUEST",
       field: "[HOST]:[METHOD]:[PATH]",
       oid: oid,
@@ -46,14 +46,14 @@ defmodule PumpersWeb.Plugs.PumpRequest do
   end
 
   defp save_headers(conn, oid) do
-    alias Pumpers.{Repo, Object}
+    alias Pumpers.{Repo, Log}
 
     headers = conn.req_headers
 
     oo =
       headers
       |> Enum.map(fn kv ->
-        %Object{
+        %Log{
           oid: oid,
           name: "HEADER",
           field: elem(kv, 0),

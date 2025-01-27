@@ -1,4 +1,4 @@
-defmodule Pumpers.Object do
+defmodule Pumpers.Log do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -7,13 +7,11 @@ defmodule Pumpers.Object do
     field :value, :string
     field :field, :string
     field :oid, :string
-
-    #timestamps(type: :utc_datetime)
   end
 
   @doc false
-  def changeset(object, attrs) do
-    object
+  def changeset(log, attrs) do
+    log
     |> cast(attrs, [:name, :oid, :field, :value])
     |> validate_required([:name, :oid, :field, :value])
   end

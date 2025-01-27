@@ -7,26 +7,23 @@
       <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6">
         v{Application.spec(:phoenix, :vsn)}
       </p>
-      <a href="/logs" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
-        Logs <span aria-hidden="true">&rarr;</span>
-      </a>
-      <a href="/logs" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
-        Monitors <span aria-hidden="true">&rarr;</span>
-      </a>
+      <%= if @current_user do %>
+        <a href="/logs" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
+          Logs <span aria-hidden="true">&rarr;</span>
+        </a>
+        <a href="/logs" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
+          Monitors <span aria-hidden="true">&rarr;</span>
+        </a>
+      <% end %>
     </div>
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <a href="https://twitter.com/elixirphoenix" class="hover:text-zinc-700">
-        @elixirphoenix
-      </a>
-      <a href="https://github.com/phoenixframework/phoenix" class="hover:text-zinc-700">
-        GitHub
-      </a>
-      <a
-        href="https://hexdocs.pm/phoenix/overview.html"
-        class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80"
-      >
-        Get Started <span aria-hidden="true">&rarr;</span>
-      </a>
+      <.login_logout
+        current_user={@current_user}
+        users_setting={~p"/users/settings"}
+        users_log_out={~p"/users/log_out"}
+        users_register={~p"/users/register"}
+        users_log_in={~p"/users/log_in"}
+      />
     </div>
   </div>
 </header>

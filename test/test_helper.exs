@@ -1,7 +1,7 @@
 ExUnit.start()
 Ecto.Adapters.SQL.Sandbox.mode(Pumpers.Repo, :manual)
 
-defmodule ObjectTest do
+defmodule LogTest do
   # Once the mode is manual, tests can also be async
   # ADD , async: true
   use ExUnit.Case
@@ -17,19 +17,18 @@ defmodule ObjectTest do
     :ok
   end
 
-  test "create simple object" do
-    assert %Pumpers.Object{} =
-             Pumpers.Repo.insert!(%Pumpers.Object{
+  test "create simple Log" do
+    assert %Pumpers.Log{} =
+             Pumpers.Repo.insert!(%Pumpers.Log{
                name: "name",
                oid: "oid",
                field: "field",
                value: "value"
-             }),
-           "Valid object"
+           })
 
     assert_raise Exqlite.Error, ~r/NOT NULL constraint/, fn ->
-      %Pumpers.Object{} =
-        Pumpers.Repo.insert!(%Pumpers.Object{name: "name", oid: "oid", field: "field"})
+      %Pumpers.Log{} =
+        Pumpers.Repo.insert!(%Pumpers.Log{name: "name", oid: "oid", field: "field"})
     end
   end
 end
