@@ -2,7 +2,7 @@ defmodule Pumpers.Object do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "objects" do
+  schema "logs" do
     field :name, :string
     field :value, :string
     field :field, :string

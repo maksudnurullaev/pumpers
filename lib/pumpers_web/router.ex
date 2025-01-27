@@ -22,6 +22,8 @@ defmodule PumpersWeb.Router do
     get "/", PumpersController, :home
     get "/hello", PumpersController, :index
     get "/hello/:messenger", PumpersController, :show
+
+    resources "/logs", LogsController, only: [:index, :show]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
