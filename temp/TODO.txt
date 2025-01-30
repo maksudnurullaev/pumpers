@@ -1,2 +1,5 @@
 List of logs
 Simple filter
+Associate roles & user
+ - DONE: Add predefined roles with seeds.exs 
+ - Add tests with users & roles
