@@ -92,6 +92,15 @@ defmodule Pumpers.AccountsTest do
       assert is_nil(user.confirmed_at)
       assert is_nil(user.password)
     end
+
+    test "registers new user and check default role" do
+      email = unique_user_email()
+      {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
+      assert %Accounts.Role{} = user.role
+      refute %Accounts.User{} == user.role
+      assert user.role.name == "Registered Users"
+      refute user.role.admin
+    end
   end
 
   describe "change_user_registration/2" do

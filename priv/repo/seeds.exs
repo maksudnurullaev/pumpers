@@ -14,17 +14,17 @@ defmodule SeedHelper do
   alias Pumpers.Accounts.Role
   alias Pumpers.Repo
 
-  defmacro check_and_insert_role(role_name, admin_status) do
+  defmacro macro_check_and_insert_role(role_name, is_admin) do
     quote do
       require Ecto.Query
 
-      if(Role |> Ecto.Query.where(name: unquote(role_name)) |> Repo.exists?()) do
+      if(Role |> Ecto.Query.where(name: ^unquote(role_name)) |> Repo.exists?()) do
         IO.puts("... ROLE: '#{unquote(role_name)}' already exists!")
       else
         role_changeset =
           Pumpers.Accounts.Role.changeset(%Pumpers.Accounts.Role{}, %{
             name: unquote(role_name),
-            admin: unquote(admin_status)
+            admin: unquote(is_admin)
           })
 
         Pumpers.Repo.insert(role_changeset)
@@ -32,15 +32,37 @@ defmodule SeedHelper do
       end
     end
   end
+
+  def check_and_insert_role(role_name, is_admin) do
+      require Ecto.Query
+
+      if(Role |> Ecto.Query.where(name: ^role_name) |> Repo.exists?()) do
+        IO.puts("... ROLE: '#{role_name}' already exists!")
+      else
+        role_changeset =
+          Pumpers.Accounts.Role.changeset(%Pumpers.Accounts.Role{}, %{
+            name: role_name,
+            admin: is_admin
+          })
+
+        Pumpers.Repo.insert(role_changeset)
+        IO.puts("... ROLE: '#{role_name}' created!")
+      end
+  end
+
 end
 
 defmodule Seeds do
   require SeedHelper
 
   def go do
-    SeedHelper.check_and_insert_role("Registered Users", false)
-    SeedHelper.check_and_insert_role("Powered Users", false)
-    SeedHelper.check_and_insert_role("Administrators", true)
+    roles =
+      %{"Registered Users" => false, "Powered Users" => false, "Administrators" => true}
+
+    Enum.map(roles, fn {role_name, is_admin} ->
+      SeedHelper.check_and_insert_role(role_name, is_admin)
+      # IO.puts("... ROLE: '#{role_name}' - #{is_admin}")
+    end)
   end
 end
 
