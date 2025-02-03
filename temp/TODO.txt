@@ -1,5 +1,7 @@
 List of logs
+ - Use LiveView
 Simple filter
 Associate roles & user
- - DONE: Add predefined roles with seeds.exs 
- - Add tests with users & roles
+ - DONE: Add predefined roles with migration 
+ - DONE: Add tests with users & roles
+Create Admin context for user management
