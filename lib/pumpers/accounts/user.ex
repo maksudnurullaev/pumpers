@@ -9,7 +9,7 @@ defmodule Pumpers.Accounts.User do
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
-    belongs_to :role, Pumpers.Accounts.Role
+    belongs_to :role, Pumpers.Accounts.Role, on_replace: :nilify
 
     timestamps(type: :utc_datetime)
   end

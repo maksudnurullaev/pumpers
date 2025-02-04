@@ -98,8 +98,8 @@ defmodule Pumpers.AccountsTest do
       {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
       assert %Accounts.Role{} = user.role
       refute %Accounts.User{} == user.role
-      assert user.role.name == "Registered Users"
-      refute user.role.admin
+      assert user.role.name == "Administrators"
+      assert user.role.admin
     end
   end
 
