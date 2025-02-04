@@ -45,6 +45,13 @@ defmodule Pumpers.Accounts.User do
     |> put_assoc(:role, Helper.get_registered_users_role())
   end
 
+  def role_changeset(user, attrs, _opts \\ []) do
+    user
+    |> cast(attrs, [:id, :role_id])
+    # |> Pumpers.Repo.preload(:role)
+    # |> cast_assoc(:role, with: &Pumpers.Accounts.Role.changeset/2)
+  end
+
   defp validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])

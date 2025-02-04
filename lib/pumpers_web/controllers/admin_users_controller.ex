@@ -2,9 +2,7 @@ defmodule PumpersWeb.AdminUsersController do
   use PumpersWeb, :controller
 
   require Plug.Conn
-  # alias Ecto.Repo
   alias Pumpers.AdminUsers
-  # alias Pumpers.Accounts.User
 
   def index(conn, _params) do
     users = AdminUsers.list_users()
@@ -35,16 +33,14 @@ defmodule PumpersWeb.AdminUsersController do
 
   def edit(conn, %{"id" => id}) do
     user = AdminUsers.get_user!(id)
-    # roles = get_all_roles_for_selection()
+    roles = get_all_roles_for_selection()
+    changeset = AdminUsers.changeset_role(user, %{"id" => id})
 
     conn
     |> assign(:user, user)
-    |> assign(:roles, get_all_roles_for_selection())
-    |> assign(:changeset, AdminUsers.changeset_role(user))
+    |> assign(:roles, roles)
+    |> assign(:changeset, changeset)
     |> render(:edit)
-
-    # changeset = AdminUsers.changeset_role(user)
-    # render(conn, :edit, user: user, changeset: changeset, roles: roles)
   end
 
   # def get_all_roles(conn, _params) do

@@ -25,8 +25,8 @@ defmodule Pumpers.AdminUsers do
 
   def changeset_role(user, params \\ %{}) do
     user
-    |> Repo.preload(:role)
-    |> cast(params, [])
+    |> cast(params, [:id, :role_id])
+    # |> Repo.preload(:role)
     # |> cast_assoc(:role, with: &Pumpers.Accounts.Role.changeset/2)
   end
 

@@ -12,7 +12,7 @@ defmodule PumpersWeb.Plugs.PumpRequest do
   def call(conn, _oid) do
     # assign(conn, :locale, default)
     oid = "#{NaiveDateTime.add(NaiveDateTime.utc_now(), +5, :hour)}"
-    IO.puts("New log OID: #{oid}")
+    # IO.puts("New log OID: #{oid}")
     save_req(conn, oid)
     assign(conn, :oid, oid)
   end

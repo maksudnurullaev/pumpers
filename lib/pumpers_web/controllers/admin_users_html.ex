@@ -9,6 +9,7 @@ defmodule PumpersWeb.AdminUsersHTML do
   attr :changeset, Ecto.Changeset, required: true
   attr :action, :string, required: true
   attr :roles, :list, required: true
+  attr :user_role_id, :integer, required: true
 
   def user_form(assigns)
 end

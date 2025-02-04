@@ -1,6 +1,19 @@
 defmodule PumpersWeb.AdminUserControllerTest do
   use PumpersWeb.ConnCase
 
+  import Pumpers.AccountsFixtures
+
+  setup do
+    %{user: user_fixture()}
+  end
+
+  describe "edit user" do
+      test "form", %{conn: conn, user: user} do
+        conn = get(conn, ~p"/admin/users/#{user.id}/edit")
+        assert html_response(conn, 200) =~ "Change role for: <b>#{user.email}</b>"
+      end
+  end
+
   # import Pumpers.AdminUsersFixtures
 
   # @create_attrs %{}
