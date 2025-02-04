@@ -1,0 +1,8 @@
+<.header>
+  Change role for: <b>{@user.email}</b>
+  <%!-- <:subtitle>Use this form to manage user records in your database.</:subtitle> --%>
+</.header>
+
+<.user_form changeset={@changeset} action={~p"/admin/users/#{@user}"} roles={@roles} user={@user}/>
+
+<.back navigate={~p"/admin/users"}>Back to users</.back>

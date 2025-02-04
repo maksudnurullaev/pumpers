@@ -1,0 +1,10 @@
+<.simple_form :let={f} for={@changeset} action={@action}>
+  <.error :if={@changeset.action}>
+    Oops, something went wrong! Please check the errors below.
+  </.error>
+  <.input name="Role" label="Role" value={@user.role_id} type="select" options={@roles} />
+  <:actions>
+    <.button>Save</.button>
+  </:actions>
+  <sup>{IO.inspect(f)}</sup>
+</.simple_form>

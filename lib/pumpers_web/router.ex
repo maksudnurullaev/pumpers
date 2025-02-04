@@ -84,6 +84,12 @@ defmodule PumpersWeb.Router do
     end
   end
 
+  scope "/admin" do
+    pipe_through :browser
+
+    resources "/users", PumpersWeb.AdminUsersController, only: [:index, :edit]
+  end
+
   ## Defult routes for all other requests
   alias PumpersWeb.NotFound
   match(:*, "/*funny_path", NotFound, :not_found)
