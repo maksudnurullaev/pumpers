@@ -21,7 +21,7 @@ defmodule PumpersWeb.AdminUserControllerTest do
   # @invalid_attrs %{}
 
   describe "index" do
-    test "lists all users", %{conn: conn} do
+     test "lists all users", %{conn: conn} do
       conn = get(conn, ~p"/admin/users")
       assert html_response(conn, 200) =~ "Listing Users"
     end
