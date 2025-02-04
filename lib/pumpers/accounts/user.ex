@@ -42,7 +42,7 @@ defmodule Pumpers.Accounts.User do
     |> cast(attrs, [:email, :password])
     |> validate_email(opts)
     |> validate_password(opts)
-    |> put_assoc(:role, Helper.get_registered_users_role())
+    |> put_assoc(:role, Helper.get_detault_role_for_new_users())
   end
 
   def role_changeset(user, attrs, _opts \\ []) do

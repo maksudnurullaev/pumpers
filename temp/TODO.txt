@@ -5,5 +5,5 @@ Associate roles & user
  - DONE: Add predefined roles with migration 
  - DONE: Add tests with users & roles
 Create Admin context for user management
-First registered user always should have "Administrators" roles
- - test it
+DONE: First registered user always should have "Administrators" roles
+    - add test
