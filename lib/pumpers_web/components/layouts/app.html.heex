@@ -1,16 +1,14 @@
 <header class="px-4 sm:px-6 lg:px-8">
   <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
     <div class="flex items-center gap-4">
-      <a href="/">
-        <img src={~p"/images/logo.svg"} width="36" />
-      </a>
       <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6">
+        <a href="https://www.phoenixframework.org/"> Phoenix </a> /
         v{Application.spec(:phoenix, :vsn)}
       </p>
       <%= if @current_user do %>
         <a href="/admin/users" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
           Users <span aria-hidden="true">&rarr;</span>
-        </a>      
+        </a>
         <a href="/logs" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
           Logs <span aria-hidden="true">&rarr;</span>
         </a>
