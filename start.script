@@ -1,2 +1,8 @@
-MIX_ENV=prod mix compile && MIX_ENV=prod mix assets.deploy && PORT=4000 MIX_ENV=prod mix phx.server
-
+# 1. Handling of your application secrets
+#  $ mix phx.gen.secret |> REALLY_LONG_SECRET
+#  $ export SECRET_KEY_BASE=REALLY_LONG_SECRET 
+# 2. Export DB configurations variable
+#  $ export DATABASE_PATH=/home/eadmin/apps/pumpers/db/hello_prod.db
+# 3. Set PROD mode
+#  $ export MIX_ENV=prod
+mix compile && mix assets.deploy && PORT=4000 [mix phx.server | iex -S mix phx.server]
