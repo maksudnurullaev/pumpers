@@ -2,6 +2,6 @@
   Change role for: <b>{@user.email}</b>
 </.header>
 
-<.user_form changeset={@changeset} action={~p"/admin/users/#{@user.id}"} roles={@roles} user_role_id={@user.role_id} />
+<.user_role_form changeset={@changeset} action={~p"/admin/users/#{@user.id}"} roles={@roles} user_role_id={@user.role_id} />
 
 <.back navigate={~p"/admin/users"}>Back to users</.back>

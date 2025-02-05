@@ -6,7 +6,8 @@ defmodule PumpersWeb.AdminUsersController do
 
   def index(conn, _params) do
     users = AdminUsers.list_users()
-    render(conn, :index, users: users)
+    roles = get_all_roles_for_selection()
+    render(conn, :index, users: users, roles: roles)
   end
 
   # def new(conn, _params) do
@@ -31,17 +32,17 @@ defmodule PumpersWeb.AdminUsersController do
   #   render(conn, :show, user: user)
   # end
 
-  def edit(conn, %{"id" => id}) do
-    user = AdminUsers.get_user!(id)
-    roles = get_all_roles_for_selection()
-    changeset = AdminUsers.changeset_role(user, %{"id" => id})
+  # def edit(conn, %{"id" => id}) do
+  #   user = AdminUsers.get_user!(id)
+  #   roles = get_all_roles_for_selection()
+  #   changeset = AdminUsers.changeset_role(user, %{"id" => id})
 
-    conn
-    |> assign(:user, user)
-    |> assign(:roles, roles)
-    |> assign(:changeset, changeset)
-    |> render(:edit)
-  end
+  #   conn
+  #   |> assign(:user, user)
+  #   |> assign(:roles, roles)
+  #   |> assign(:changeset, changeset)
+  #   |> render(:edit)
+  # end
 
   # def get_all_roles(conn, _params) do
   defp get_all_roles_for_selection() do

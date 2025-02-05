@@ -27,6 +27,7 @@ defmodule PumpersWeb.Router do
     get "/hello/:messenger", PumpersController, :show
 
     resources "/logs", LogsController, only: [:index, :show]
+
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
@@ -69,6 +70,7 @@ defmodule PumpersWeb.Router do
       on_mount: [{PumpersWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/admin/users/live", AdminUsersLive
     end
   end
 
@@ -91,6 +93,7 @@ defmodule PumpersWeb.Router do
   end
 
   ## Defult routes for all other requests
+  # alias Pumpers.Live.AdminUsersLive
   alias PumpersWeb.NotFound
   match(:*, "/*funny_path", NotFound, :not_found)
 end

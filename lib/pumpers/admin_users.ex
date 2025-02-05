@@ -2,8 +2,6 @@ defmodule Pumpers.AdminUsers do
   @moduledoc """
   The AdminUsers context.
   """
-  import Ecto.Changeset
-
   import Ecto.Query, warn: false
   alias Pumpers.Repo
 
@@ -20,12 +18,21 @@ defmodule Pumpers.AdminUsers do
 
   """
   def list_users do
-    Repo.all(User)
+    query =
+      from u in User,
+        join: r in assoc(u, :role),
+        select: %{id: u.id, email: u.email, role: r.name, role_id: r.id}
+
+    Repo.all(query)
+    # Repo.all(User) |> Repo.preload(:role)
   end
 
+  @doc """
+  Use role has admin
   def changeset_role(user, params \\ %{}) do
     user
     |> cast(params, [:id, :role_id])
+
     # |> Repo.preload(:role)
     # |> cast_assoc(:role, with: &Pumpers.Accounts.Role.changeset/2)
   end

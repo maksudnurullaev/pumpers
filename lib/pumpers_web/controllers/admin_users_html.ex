@@ -11,5 +11,5 @@ defmodule PumpersWeb.AdminUsersHTML do
   attr :roles, :list, required: true
   attr :user_role_id, :integer, required: true
 
-  def user_form(assigns)
+  def user_role_form(assigns)
 end

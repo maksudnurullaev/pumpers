@@ -7,19 +7,26 @@
   </:actions> --%>
 </.header>
 
-<.table id="users" rows={@users} row_click={&JS.navigate(~p"/admin/users/#{&1}/edit")}>
-  <:col :let={user} label="id">{user.id}</:col>
-  <:col :let={user} label="username">{user.email}</:col>
+<.table id="users" rows={@users}>
+  <%!-- _row_click={&JS.navigate(~p"/admin/users/#{&1}/edit")}> --%>
+  <:col :let={user} label="#ID">{user.id}</:col>
+  <:col :let={user} label="Name">{user.email}</:col>
+  <%!-- <:col :let={user} label="User role">{user.role.name}</:col> --%>
+  <:col :let={user} label="Role">
+    <.input name="Role" value={user.role_id} type="select" options={@roles} />
+  </:col>
 
-  <:action :let={user}>
+  <%!-- <:action :let={user}>
     <div class="sr-only">
       <.link navigate={~p"/admin/users/#{user}/edit"}>Show</.link>
     </div>
     <.link navigate={~p"/admin/users/#{user}/edit"}>Edit</.link>
-  </:action>
+  </:action> --%>
   <%!-- <:action :let={user}>
     <.link href={~p"/users/#{user}"} method="delete" data-confirm="Are you sure?">
       Delete
     </.link>
   </:action> --%>
 </.table>
+
+<%!-- <.admin_users_live /> --%>

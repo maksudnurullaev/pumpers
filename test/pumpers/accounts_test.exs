@@ -99,7 +99,7 @@ defmodule Pumpers.AccountsTest do
       assert %Accounts.Role{} = user.role
       refute %Accounts.User{} == user.role
       assert user.role.name == "Administrators"
-      assert user.role.admin
+      assert user.role.is_admin
     end
   end
 

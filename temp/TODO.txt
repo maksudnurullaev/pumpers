@@ -7,3 +7,5 @@ Associate roles & user
 Create Admin context for user management
 DONE: First registered user always should have "Administrators" roles
     - add test
+DONE: Change riles field name 'admin' to 'is_admin'
+Add [is_admin | is_powered | is_registered] functionality
