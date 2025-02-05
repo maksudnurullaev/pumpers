@@ -17,7 +17,7 @@ defmodule PumpersWeb do
   those modules here.
   """
 
-  def static_paths, do: ~w(assets fonts images robots.txt favicon.ico manifest.json browserconfig.xml)
+  def static_paths, do: ~w(assets fonts images robots.txt favicon.ico manifest.json)
 
   def router do
     quote do
