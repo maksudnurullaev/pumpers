@@ -6,6 +6,6 @@ Associate roles & user
  - DONE: Add tests with users & roles
 Create Admin context for user management
 DONE: First registered user always should have "Administrators" roles
-    - add test for two registered user. First should have "Administrators" role, second  - "registered users " role
+    - DONE: add test for two registered user. First should have "Administrators" role, second  - "Registered users " role
 DONE: Change riles field name 'admin' to 'is_admin'
 Add [is_admin | is_powered | is_registered] functionality

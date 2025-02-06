@@ -8,6 +8,14 @@ defmodule Pumpers.Accounts.Helper do
   @powered_users_roles_name "Powered Users"
   @administrators_users_roles_name "Administrators"
 
+  def get_roles_map() do
+    %{
+      @registered_users_roles_name => false,
+      @powered_users_roles_name => false,
+      @administrators_users_roles_name => true
+    }
+  end
+
   def get_all_roles_names() do
     [@administrators_users_roles_name, @powered_users_roles_name, @registered_users_roles_name]
   end

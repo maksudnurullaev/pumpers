@@ -4,7 +4,7 @@ defmodule Pumpers.Repo.Migrations.CreateRoles do
   def change do
     create table(:roles) do
       add :name, :string
-      add :admin, :boolean, default: false, null: false
+      add :is_admin, :boolean, default: false, null: false
     end
   end
 end
