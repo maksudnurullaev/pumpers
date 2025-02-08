@@ -1,6 +1,7 @@
 defmodule Pumpers.Accounts.Helper do
   alias Pumpers.Accounts.{Role, User}
   alias Pumpers.Repo
+  import Ecto.Query, warn: false
 
   @doc """
   Some helper functions for the Accounts context.
@@ -11,6 +12,19 @@ defmodule Pumpers.Accounts.Helper do
 
   def count_of(schema) do
     schema |> Repo.aggregate(:count)
+  end
+
+  def get_all_roles_as_map() do
+    Pumpers.Accounts.Role |> Pumpers.Repo.all() |> Enum.map(&{&1.name, &1.id})
+  end
+
+  def get_all_users_vs_role_id() do
+    query =
+      from u in User,
+        join: r in assoc(u, :role),
+        select: %{id: u.id, email: u.email, role: r.name, role_id: r.id}
+
+    Repo.all(query)
   end
 
   def has_role?(%User{:role_id => role_id}, role_name) do

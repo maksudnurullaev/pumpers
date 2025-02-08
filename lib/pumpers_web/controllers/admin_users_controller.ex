@@ -2,11 +2,11 @@ defmodule PumpersWeb.AdminUsersController do
   use PumpersWeb, :controller
 
   require Plug.Conn
-  alias Pumpers.AdminUsers
+  alias Pumpers.Accounts.Helper
 
   def index(conn, _params) do
-    users = AdminUsers.list_users()
-    roles = get_all_roles_for_selection()
+    users = Helper.get_all_users_vs_role_id()
+    roles = Helper.get_all_roles_as_map()
     render(conn, :index, users: users, roles: roles)
   end
 
@@ -45,9 +45,9 @@ defmodule PumpersWeb.AdminUsersController do
   # end
 
   # def get_all_roles(conn, _params) do
-  defp get_all_roles_for_selection() do
-    Pumpers.Accounts.Role |> Pumpers.Repo.all() |> Enum.map(&{&1.name, &1.id})
-  end
+  # defp get_all_roles_for_selection() do
+  #   Pumpers.Accounts.Role |> Pumpers.Repo.all() |> Enum.map(&{&1.name, &1.id})
+  # end
 
   # def update(conn, %{"id" => id, "user" => user_params}) do
   #   user = AdminUsers.get_user!(id)
