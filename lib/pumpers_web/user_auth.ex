@@ -4,6 +4,7 @@ defmodule PumpersWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
 
+  alias Pumpers.Accounts.Helper
   alias Pumpers.Accounts
 
   # Make the remember me cookie valid for 60 days.
@@ -164,6 +165,24 @@ defmodule PumpersWeb.UserAuth do
     end
   end
 
+  def on_mount(:require_user_with_admin_role, _params, session, socket) do
+    socket = mount_current_user(socket, session)
+
+    if socket.assigns.current_user && Helper.is_administrator?(socket.assigns.current_user) do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(
+          :error,
+          "You must log in as Administrator to access this page."
+        )
+        |> Phoenix.LiveView.redirect(to: ~p"/users/log_in")
+
+      {:halt, socket}
+    end
+  end
+
   def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
     socket = mount_current_user(socket, session)
 
@@ -207,6 +226,32 @@ defmodule PumpersWeb.UserAuth do
     else
       conn
       |> put_flash(:error, "You must log in to access this page.")
+      |> maybe_store_return_to()
+      |> redirect(to: ~p"/users/log_in")
+      |> halt()
+    end
+  end
+
+  def require_user_with_admin_role(conn, _opts) do
+    if conn.assigns[:current_user] && Helper.is_administrator?(conn.assigns[:current_user]) do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must log as in Administrator to access this page.")
+      |> maybe_store_return_to()
+      |> redirect(to: ~p"/users/log_in")
+      |> halt()
+    end
+  end
+
+  def require_powered_user_role(conn, _opts) do
+    if conn.assigns[:current_user] &&
+         (Helper.is_powered_user?(conn.assigns[:current_user]) ||
+            Helper.is_administrator?(conn.assigns[:current_user])) do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must log as in [Administrator|Powered user] to access this page.")
       |> maybe_store_return_to()
       |> redirect(to: ~p"/users/log_in")
       |> halt()

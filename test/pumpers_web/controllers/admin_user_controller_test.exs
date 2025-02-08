@@ -1,97 +1,45 @@
 defmodule PumpersWeb.AdminUserControllerTest do
+  alias Pumpers.Accounts.User
+  alias Pumpers.Accounts.Helper
   use PumpersWeb.ConnCase
 
   import Pumpers.AccountsFixtures
+  import Pumpers.Accounts.Helper
 
   setup do
     %{user: user_fixture()}
   end
 
-  # describe "edit user" do # This test is not working
-  #   test "form", %{conn: conn, user: user} do
-  #     conn = get(conn, ~p"/admin/users/#{user.id}/edit")
-  #     assert html_response(conn, 200) =~ "Change role for: <b>#{user.email}</b>"
-  #   end
-  # end
-
-  # import Pumpers.AdminUsersFixtures
-
-  # @create_attrs %{}
-  # @update_attrs %{}
-  # @invalid_attrs %{}
-
-  describe "index" do
-    test "lists all users", %{conn: conn} do
+  describe "access_to_admin_pages" do
+    test "could not access to admin pages withouf login", %{conn: conn} do
       conn = get(conn, ~p"/admin/users")
+
+      assert conn.halted
+      assert redirected_to(conn) == ~p"/users/log_in"
+
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) ==
+               "You must log in to access this page."
+    end
+
+    test "access admin's pages - success with Administrator role", %{conn: conn, user: user} do
+      conn = log_in_user(conn, user)
+      assert is_administrator?(user)
+      assert 1 == Helper.count_of(User)
+      assert conn = get(conn, ~p"/admin/users")
       assert html_response(conn, 200) =~ "Listing Users"
     end
+
+    test "access admin's pages - failed without Administrator role", %{conn: conn} do
+      %{conn: conn, user: user} = register_and_log_in_user(%{conn: conn})
+      refute is_administrator?(user)
+
+      assert conn = get(conn, ~p"/admin/users")
+      assert html_response(conn, 302) =~ "redirected"
+
+      assert conn.halted
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) ==
+               "You must log as in Administrator to access this page."
+
+    end
   end
-
-  # describe "new user" do
-  #   test "renders form", %{conn: conn} do
-  #     conn = get(conn, ~p"/users/new")
-  #     assert html_response(conn, 200) =~ "New User"
-  #   end
-  # end
-
-  # describe "create user" do
-  #   test "redirects to show when data is valid", %{conn: conn} do
-  #     conn = post(conn, ~p"/users", user: @create_attrs)
-
-  #     assert %{id: id} = redirected_params(conn)
-  #     assert redirected_to(conn) == ~p"/users/#{id}"
-
-  #     conn = get(conn, ~p"/users/#{id}")
-  #     assert html_response(conn, 200) =~ "User #{id}"
-  #   end
-
-  #   test "renders errors when data is invalid", %{conn: conn} do
-  #     conn = post(conn, ~p"/users", user: @invalid_attrs)
-  #     assert html_response(conn, 200) =~ "New User"
-  #   end
-  # end
-
-  # describe "edit user" do
-  #   setup [:create_user]
-
-  #   test "renders form for editing chosen user", %{conn: conn, user: user} do
-  #     conn = get(conn, ~p"/users/#{user}/edit")
-  #     assert html_response(conn, 200) =~ "Edit User"
-  #   end
-  # end
-
-  # describe "update user" do
-  #   setup [:create_user]
-
-  #   test "redirects when data is valid", %{conn: conn, user: user} do
-  #     conn = put(conn, ~p"/users/#{user}", user: @update_attrs)
-  #     assert redirected_to(conn) == ~p"/users/#{user}"
-
-  #     conn = get(conn, ~p"/users/#{user}")
-  #     assert html_response(conn, 200)
-  #   end
-
-  #   test "renders errors when data is invalid", %{conn: conn, user: user} do
-  #     conn = put(conn, ~p"/users/#{user}", user: @invalid_attrs)
-  #     assert html_response(conn, 200) =~ "Edit User"
-  #   end
-  # end
-
-  # describe "delete user" do
-  #   setup [:create_user]
-
-  #   test "deletes chosen user", %{conn: conn, user: user} do
-  #     conn = delete(conn, ~p"/users/#{user}")
-  #     assert redirected_to(conn) == ~p"/users"
-
-  #     assert_error_sent 404, fn ->
-  #       get(conn, ~p"/users/#{user}")
-  #     end
-  #   end
-  # end
-
-  # defp create_user(_) do
-  #   user = user_fixture()
-  #   %{user: user}
-  # end
 end

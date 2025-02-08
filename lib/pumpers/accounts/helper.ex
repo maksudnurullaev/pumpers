@@ -1,5 +1,6 @@
 defmodule Pumpers.Accounts.Helper do
   alias Pumpers.Accounts.{Role, User}
+  alias Pumpers.Repo
 
   @doc """
   Some helper functions for the Accounts context.
@@ -7,6 +8,26 @@ defmodule Pumpers.Accounts.Helper do
   @registered_users_roles_name "Registered Users"
   @powered_users_roles_name "Powered Users"
   @administrators_users_roles_name "Administrators"
+
+  def count_of(schema) do
+    schema |> Repo.aggregate(:count)
+  end
+
+  def has_role?(%User{:role_id => role_id}, role_name) do
+    Role |> Pumpers.Repo.get(role_id) |> Map.get(:name) == role_name
+  end
+
+  def is_administrator?(%User{:role_id => role_id}) do
+    has_role?(%User{:role_id => role_id}, @administrators_users_roles_name)
+  end
+
+  def is_powered_user?(%User{:role_id => role_id}) do
+    has_role?(%User{:role_id => role_id}, @powered_users_roles_name)
+  end
+
+  def is_registered_user?(%User{:role_id => role_id}) do
+    has_role?(%User{:role_id => role_id}, @registered_users_roles_name)
+  end
 
   def get_roles_map() do
     %{

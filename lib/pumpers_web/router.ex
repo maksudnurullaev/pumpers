@@ -25,9 +25,13 @@ defmodule PumpersWeb.Router do
     get "/", PumpersController, :home
     get "/hello", PumpersController, :index
     get "/hello/:messenger", PumpersController, :show
+  end
+
+  scope "/", PumpersWeb do
+    pipe_through [:browser, :require_powered_user_role]
 
     resources "/logs", LogsController, only: [:index, :show]
-
+    resources "/monitors", MonitorsController, only: [:index, :show]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
@@ -70,6 +74,17 @@ defmodule PumpersWeb.Router do
       on_mount: [{PumpersWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+    end
+  end
+
+  scope "/", PumpersWeb do
+    pipe_through [:browser, :require_authenticated_user, :require_user_with_admin_role]
+
+    live_session :require_user_with_admin_role,
+      on_mount: [
+        {PumpersWeb.UserAuth, :ensure_authenticated},
+        {PumpersWeb.UserAuth, :require_user_with_admin_role}
+      ] do
       live "/admin/users/live", AdminUsersLive
     end
   end
@@ -87,7 +102,7 @@ defmodule PumpersWeb.Router do
   end
 
   scope "/admin" do
-    pipe_through :browser
+    pipe_through [:browser, :require_authenticated_user, :require_user_with_admin_role]
 
     resources "/users", PumpersWeb.AdminUsersController, only: [:index, :edit]
   end

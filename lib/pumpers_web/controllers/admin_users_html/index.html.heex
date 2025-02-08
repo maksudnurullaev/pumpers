@@ -13,7 +13,11 @@
   <:col :let={user} label="Name">{user.email}</:col>
   <%!-- <:col :let={user} label="User role">{user.role.name}</:col> --%>
   <:col :let={user} label="Role">
+    <%= if user.id == @current_user.id do %>
+      <strong><%= user.role %></strong>
+    <% else  %>
     <.input name="Role" value={user.role_id} type="select" options={@roles} />
+    <% end %>
   </:col>
 
   <%!-- <:action :let={user}>

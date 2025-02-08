@@ -1,4 +1,4 @@
-defmodule PumpersWeb.LogsController do
+defmodule PumpersWeb.MonitorsController do
   use PumpersWeb, :controller
 
   def index(conn, _params) do

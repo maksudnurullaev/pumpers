@@ -10,7 +10,7 @@ defmodule PumpersWeb.AdminUsersLive do
 
   def mount(_params, _session, socket) do
     temperature = 70 # Let's assume a fixed temperature for now
-    IO.inspect(socket.assigns)
+    IO.inspect(socket.assigns.current_user)
     {:ok, assign(socket, :temperature, temperature)}
   end
 

@@ -5,6 +5,7 @@ defmodule Pumpers.AccountsTest do
 
   import Pumpers.AccountsFixtures
   alias Pumpers.Accounts.{User, UserToken}
+  import Pumpers.Accounts.Helper
 
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
@@ -98,15 +99,14 @@ defmodule Pumpers.AccountsTest do
       email = unique_user_email()
       {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
       assert %Accounts.Role{} = user.role
-      refute %Accounts.User{} == user.role
-      assert user.role.name == "Administrators"
-      assert user.role.is_admin
+      assert is_administrator?(user)
 
       # Second user should be a registered user
       email = unique_user_email()
       {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
-      assert user.role.name == "Registered Users"
-      refute user.role.is_admin
+      assert is_registered_user?(user)
+      refute is_powered_user?(user)
+      refute is_administrator?(user)
     end
   end
 
