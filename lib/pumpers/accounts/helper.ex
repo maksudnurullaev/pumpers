@@ -14,6 +14,17 @@ defmodule Pumpers.Accounts.Helper do
     schema |> Repo.aggregate(:count)
   end
 
+  def change_user_role(user_id, user_role_id_new) do
+    user = User |> Repo.get!(String.to_integer(user_id))
+    user_role_id_old = user.role_id
+
+    if user_role_id_old != user_role_id_new do
+      user
+      |> Ecto.Changeset.change(role_id: String.to_integer(user_role_id_new))
+      |> Repo.update!()
+    end
+  end
+
   def get_all_roles_as_map() do
     Pumpers.Accounts.Role |> Pumpers.Repo.all() |> Enum.map(&{&1.name, &1.id})
   end
