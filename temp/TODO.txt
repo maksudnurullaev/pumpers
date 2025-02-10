@@ -9,3 +9,4 @@ DONE: First registered user always should have "Administrators" roles
     - DONE: add test for two registered user. First should have "Administrators" role, second  - "Registered users " role
 DONE: Change riles field name 'admin' to 'is_admin'
 Add [is_admin | is_powered | is_registered] functionality
+Change admin role doesn't work if user already logged in!

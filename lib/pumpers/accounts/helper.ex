@@ -14,6 +14,11 @@ defmodule Pumpers.Accounts.Helper do
     schema |> Repo.aggregate(:count)
   end
 
+  def user_is_valid_by_update_at?(%{:id => id, :updated_at => updated_at} = _user) do
+    user_updated_at = User |> Repo.get!(id) |> Map.get(:updated_at)
+    user_updated_at == updated_at
+  end
+
   def change_user_role(user_id, user_role_id_new) do
     user = User |> Repo.get!(String.to_integer(user_id))
     user_role_id_old = user.role_id

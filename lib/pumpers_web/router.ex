@@ -101,11 +101,11 @@ defmodule PumpersWeb.Router do
     end
   end
 
-  scope "/admin" do
-    pipe_through [:browser, :require_authenticated_user, :require_user_with_admin_role]
+  # scope "/admin" do
+  #   pipe_through [:browser, :require_authenticated_user, :require_user_with_admin_role]
 
-    resources "/users", PumpersWeb.AdminUsersController, only: [:index, :edit]
-  end
+  #   resources "/users", PumpersWeb.AdminUsersController, only: [:index, :edit]
+  # end
 
   ## Defult routes for all other requests
   # alias Pumpers.Live.AdminUsersLive

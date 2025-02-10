@@ -233,14 +233,24 @@ defmodule PumpersWeb.UserAuth do
   end
 
   def require_user_with_admin_role(conn, _opts) do
-    if conn.assigns[:current_user] && Helper.is_administrator?(conn.assigns[:current_user]) do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must log as in Administrator to access this page.")
-      |> maybe_store_return_to()
-      |> redirect(to: ~p"/users/log_in")
-      |> halt()
+    current_user = conn.assigns[:current_user]
+
+    cond do
+      current_user && Helper.is_administrator?(current_user) &&
+          Helper.user_is_valid_by_update_at?(current_user) ->
+        conn
+
+      current_user ->
+        conn
+        |> put_flash(:error, "You must log as 'Administrator'!")
+        |> redirect(to: ~p"/")
+        |> halt()
+
+      true ->
+        conn
+        |> put_flash(:error, "You must log as 'Administrator'!")
+        |> redirect(to: ~p"/users/log_in")
+        |> halt()
     end
   end
 
