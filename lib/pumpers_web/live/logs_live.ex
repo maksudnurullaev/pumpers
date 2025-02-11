@@ -6,23 +6,23 @@ defmodule PumpersWeb.LogsLive do
   def render(assigns) do
     ~H"""
     <.header>
-      Logs - {@form["show_modal"]}
+      Logs - {@show_modal}
     </.header>
 
-    <.form for={@form} phx-submit="get_details">
+    <.form for={@toolbar} phx-submit="get_details">
       <ul class="flex">
         <li class="mr-6">
           <.input
             id="logs_page_size_id"
             name="page_size"
             type="select"
-            value={@form["page_size"]}
+            value={@toolbar["page_size"]}
             options={[25, 50, 100]}
           />
         </li>
         <li class="mr-6">
           <.input
-            value={@form["search_text"]}
+            value={@toolbar["search_text"]}
             name="my-input"
             type="search"
             placeholder="search text"
@@ -35,18 +35,17 @@ defmodule PumpersWeb.LogsLive do
         </li>
       </ul>
     </.form>
-    <.table id="logs" rows={@form["logs"]} row_click={&JS.push("get_details", value: %{oid: &1.oid})}>
+    <.table id="logs" rows={@logs} row_click={&JS.push("get_details", value: %{oid: &1.oid})}>
       <:col :let={log} label="#ID">{log.id}</:col>
       <:col :let={log} label="[HOST]:[METHOD]:[PATH]">{log.value}</:col>
     </.table>
 
-    <hr />
-    <%= if @form["details"] do %>
-      <.modal id="details-modal" show={@form["show_modal"]} on_cancel={JS.push("hide_modal")}>
+    <%= if @details do %>
+      <.modal id="details-modal" show={@show_modal} on_cancel={JS.push("hide_modal")}>
         <.header>
           Details
         </.header>
-        <.table id="details" rows={@form["details"]}>
+        <.table id="details" rows={@details}>
           <:col :let={detail} label="Name">{detail.field}</:col>
           <:col :let={detail} label="Value"><textarea readonly>{detail.value}</textarea></:col>
         </.table>
@@ -64,25 +63,28 @@ defmodule PumpersWeb.LogsLive do
   def mount(_params, _session, socket) do
     logs = LogsHelper.get_log_by_name()
 
-    form = %{
-      "logs" => logs,
-      "details" => nil,
-      "show_modal" => false,
-      "search_text" => "",
-      "page_size" => 25
-    }
+    form = [
+      logs: logs,
+      details: nil,
+      show_modal: false,
+      toolbar: %{
+        "page_size" => 25,
+        "search_text" => ""
+      }
+    ]
 
-    {:ok, assign(socket, form: form)}
+    {:ok, assign(socket, form)}
   end
 
   def handle_event("hide_modal", _params, socket) do
-    form = %{
-      "logs" => LogsHelper.get_log_by_name(),
-      "details" => nil,
-      "show_modal" => false
-    }
-
-    {:noreply, update(socket, :form, &(&1 = form))}
+    # form = %{
+    #   "details" => nil,
+    #   "show_modal" => false
+    # }
+    # |> update(:show_modal, &(&1 = false))
+    # socket = socket |> update(:details, &(&1 = nil))
+    socket = socket |> update(:details, &(&1 = nil)) |> update(:show_modal, &(&1 = false))
+    {:noreply, socket}
   end
 
   def handle_event(
@@ -97,13 +99,15 @@ defmodule PumpersWeb.LogsLive do
       # logs = LogsHelper.get_log_by_name()
       # IO.inspect(LogsHelper.get_log_details(oid))
 
-      form = %{
-        "logs" => LogsHelper.get_log_by_name(),
-        "details" => LogsHelper.get_log_details(oid),
-        "show_modal" => true
-      }
+      # form = %{
+      #   "logs" => LogsHelper.get_log_by_name(),
+      #   "details" => LogsHelper.get_log_details(oid),
+      #   "show_modal" => true
+      # }
 
-      {:noreply, update(socket, :form, &(&1 = form))}
+      details = LogsHelper.get_log_details(oid)
+      socket = socket |> update(:details, &(&1 = details)) |> update(:show_modal, &(&1 = true))
+      {:noreply, socket}
     else
       socket = put_flash(socket, :error, "User does not have proper rights!")
       {:noreply, redirect(socket, to: ~p"/")}
