@@ -23,16 +23,16 @@ defmodule PumpersWeb.Router do
     pipe_through :browser
 
     get "/", PumpersController, :home
-    get "/hello", PumpersController, :index
-    get "/hello/:messenger", PumpersController, :show
+  #   get "/hello", PumpersController, :index
+  #   get "/hello/:messenger", PumpersController, :show
   end
 
-  scope "/", PumpersWeb do
-    pipe_through [:browser, :require_powered_user_role]
+  # scope "/", PumpersWeb do
+  #   pipe_through [:browser, :require_powered_user_role]
 
-    resources "/logs", LogsController, only: [:index, :show]
-    resources "/monitors", MonitorsController, only: [:index, :show]
-  end
+  #   resources "/logs", LogsController, only: [:index, :show]
+  #   resources "/monitors", MonitorsController, only: [:index, :show]
+  # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:pumpers, :dev_routes) do
@@ -85,7 +85,20 @@ defmodule PumpersWeb.Router do
         {PumpersWeb.UserAuth, :ensure_authenticated},
         {PumpersWeb.UserAuth, :require_user_with_admin_role}
       ] do
-      live "/admin/users/live", AdminUsersLive
+      live "/admin/users/live", AdminUsersLive, :new
+    end
+  end
+
+  scope "/", PumpersWeb do
+    pipe_through [:browser, :require_authenticated_user, :require_powered_user_role]
+
+    live_session :require_powered_user_role,
+      on_mount: [
+        {PumpersWeb.UserAuth, :ensure_authenticated},
+        {PumpersWeb.UserAuth, :require_powered_user_role}
+      ] do
+      live "/logs/live", LogsLive , :new
+      live "/monitors/live", MonitorsLive, :new
     end
   end
 

@@ -167,19 +167,62 @@ defmodule PumpersWeb.UserAuth do
 
   def on_mount(:require_user_with_admin_role, _params, session, socket) do
     socket = mount_current_user(socket, session)
+    current_user = socket.assigns[:current_user]
 
-    if socket.assigns.current_user && Helper.is_administrator?(socket.assigns.current_user) do
-      {:cont, socket}
-    else
-      socket =
+    cond do
+      current_user && Helper.is_administrator?(current_user) ->
+        {:cont, socket}
+
+      current_user ->
+        socket =
+          socket
+          |> Phoenix.LiveView.put_flash(
+            :error,
+            "You must log in as 'Administrator' to access this page."
+          )
+
+        {:halt, socket}
+
+      true ->
         socket
         |> Phoenix.LiveView.put_flash(
           :error,
-          "You must log in as Administrator to access this page."
+          "You must log in as 'Administrator' to access this page."
         )
         |> Phoenix.LiveView.redirect(to: ~p"/users/log_in")
 
-      {:halt, socket}
+        {:halt, socket}
+    end
+  end
+
+  def on_mount(:require_powered_user_role, _params, session, socket) do
+    socket = mount_current_user(socket, session)
+    current_user = socket.assigns[:current_user]
+
+    cond do
+      current_user &&
+          (Helper.is_powered_user?(current_user) || Helper.is_administrator?(current_user)) ->
+        {:cont, socket}
+
+      current_user ->
+        socket =
+          socket
+          |> Phoenix.LiveView.put_flash(
+            :error,
+            "You must log in at least as 'Powered users' to access this page."
+          )
+
+        {:halt, socket}
+
+      true ->
+        socket
+        |> Phoenix.LiveView.put_flash(
+          :error,
+          "You must log in to access this page."
+        )
+        |> Phoenix.LiveView.redirect(to: ~p"/users/log_in")
+
+        {:halt, socket}
     end
   end
 
@@ -242,29 +285,38 @@ defmodule PumpersWeb.UserAuth do
 
       current_user ->
         conn
-        |> put_flash(:error, "You must log as 'Administrator'!")
+        |> put_flash(:error, "You must log in as 'Administrator'!")
         |> redirect(to: ~p"/")
         |> halt()
 
       true ->
         conn
-        |> put_flash(:error, "You must log as 'Administrator'!")
+        |> put_flash(:error, "You must log in as 'Administrator'!")
         |> redirect(to: ~p"/users/log_in")
         |> halt()
     end
   end
 
   def require_powered_user_role(conn, _opts) do
-    if conn.assigns[:current_user] &&
-         (Helper.is_powered_user?(conn.assigns[:current_user]) ||
-            Helper.is_administrator?(conn.assigns[:current_user])) do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must log as in [Administrator|Powered user] to access this page.")
-      |> maybe_store_return_to()
-      |> redirect(to: ~p"/users/log_in")
-      |> halt()
+    current_user = conn.assigns[:current_user]
+
+    cond do
+      current_user &&
+        (Helper.is_powered_user?(current_user) || Helper.is_administrator?(current_user)) &&
+          Helper.user_is_valid_by_update_at?(current_user) ->
+        conn
+
+      current_user ->
+        conn
+        |> put_flash(:error, "You must log in at least as 'Powered users'!")
+        |> redirect(to: ~p"/")
+        |> halt()
+
+      true ->
+        conn
+        |> put_flash(:error, "You must log in at least as 'Powered users'!")
+        |> redirect(to: ~p"/users/log_in")
+        |> halt()
     end
   end
 

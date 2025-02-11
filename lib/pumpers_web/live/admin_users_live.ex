@@ -51,8 +51,11 @@ defmodule PumpersWeb.AdminUsersLive do
         %{"user_id" => user_id, "user_role_id_new" => user_role_id_new},
         socket
       ) do
-    if Helper.user_is_valid_by_update_at?(socket.assigns[:current_user]) do
-      Helper.change_user_role(user_id, user_role_id_new)
+
+    current_user = socket.assigns[:current_user]
+
+    if Helper.user_is_valid_by_update_at?(current_user) do
+      Helper.change_user_role(String.to_integer(user_id), user_role_id_new)
       socket = put_flash(socket, :info, "Role changed!")
       form = Map.put(socket.assigns.form, "users", Helper.get_all_users_vs_role_id())
       {:noreply, update(socket, :form, &(&1 = form))}

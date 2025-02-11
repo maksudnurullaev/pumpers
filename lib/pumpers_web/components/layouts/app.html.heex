@@ -7,15 +7,15 @@
       </p>
       <%= if @current_user do %>
         <%= if is_user?(:admin, @current_user) do %>
-          <a href="/admin/users/live" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
+          <a href="/admin/users/live" class="rounded-lg px-2 py-1 bg-red-300 hover:bg-sky-700">
             Users <span aria-hidden="true">&rarr;</span>
           </a>
         <% end %>
         <%= if is_user?(:powered, @current_user) do %>
-          <a href="/logs" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
+          <a href="/logs/live" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
             Logs <span aria-hidden="true">&rarr;</span>
           </a>
-          <a href="/monitors" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
+          <a href="/monitors/live" class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80">
             Monitors <span aria-hidden="true">&rarr;</span>
           </a>
         <% end %>
@@ -32,8 +32,8 @@
     </div>
   </div>
 </header>
-<main class="px-4 py-20 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-2xl">
+<main class="px-4 py-4 sm:px-6 lg:px-4">
+  <div class="mx-auto">
     <.flash_group flash={@flash} />
     {@inner_content}
   </div>

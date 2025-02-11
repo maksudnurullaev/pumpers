@@ -37,7 +37,7 @@ defmodule PumpersWeb.AdminUserControllerTest do
       assert conn.halted
 
       assert Phoenix.Flash.get(conn.assigns.flash, :error) ==
-               "You must log as 'Administrator'!"
+               "You must log in as 'Administrator'!"
 
       assert html_response(conn, 302) =~ "redirected"
     end

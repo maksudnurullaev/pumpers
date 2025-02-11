@@ -19,8 +19,8 @@ defmodule Pumpers.Accounts.Helper do
     user_updated_at == updated_at
   end
 
-  def change_user_role(user_id, user_role_id_new) do
-    user = User |> Repo.get!(String.to_integer(user_id))
+  def change_user_role(user_id, user_role_id_new) when is_integer(user_id) do
+    user = User |> Repo.get!(user_id)
     user_role_id_old = user.role_id
 
     if user_role_id_old != user_role_id_new do
