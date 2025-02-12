@@ -23,8 +23,8 @@ defmodule PumpersWeb.Router do
     pipe_through :browser
 
     get "/", PumpersController, :home
-  #   get "/hello", PumpersController, :index
-  #   get "/hello/:messenger", PumpersController, :show
+    #   get "/hello", PumpersController, :index
+    #   get "/hello/:messenger", PumpersController, :show
   end
 
   # scope "/", PumpersWeb do
@@ -97,7 +97,7 @@ defmodule PumpersWeb.Router do
         {PumpersWeb.UserAuth, :ensure_authenticated},
         {PumpersWeb.UserAuth, :require_powered_user_role}
       ] do
-      live "/logs/live", LogsLive , :new
+      live "/logs/live", LogsLive, :new
       live "/monitors/live", MonitorsLive, :new
     end
   end
@@ -122,6 +122,9 @@ defmodule PumpersWeb.Router do
 
   ## Defult routes for all other requests
   # alias Pumpers.Live.AdminUsersLive
-  alias PumpersWeb.NotFound
-  match(:*, "/*funny_path", NotFound, :not_found)
+  # alias PumpersWeb.NotFound
+  # live_session :not_found, on_mount: [{PumpersWeb.NotFound, :mount}] do
+  #   live(:not_found, NotFoundLive, :new)
+  # end
+  match(:*, "/*funny_path", PumpersWeb.NotFound, :not_found)
 end
