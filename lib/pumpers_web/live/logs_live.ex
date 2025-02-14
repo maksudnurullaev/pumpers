@@ -17,7 +17,7 @@ defmodule PumpersWeb.LogsLive do
       <.table id="details" rows={@details}>
         <:col :let={detail} label="Name">{detail.field}</:col>
         <:col :let={detail} label="Value">
-          <textarea class="resize rounded-md w-full" readonly>{detail.value}</textarea>
+          <pre>{detail.value}</pre>
         </:col>
       </.table>
       <%!-- </.modal> --%>
@@ -56,7 +56,11 @@ defmodule PumpersWeb.LogsLive do
         </ul>
       </.form>
 
-      <.table id="logs" rows={@logs} row_click={&JS.push("get_request_headers", value: %{oid: &1.oid})}>
+      <.table
+        id="logs"
+        rows={@logs}
+        row_click={&JS.push("get_request_headers", value: %{oid: &1.oid})}
+      >
         <:col :let={log} label="#ID">{log.id}</:col>
         <:col :let={log} label="[HOST]:[METHOD]:[PATH]">{log.value}</:col>
       </.table>

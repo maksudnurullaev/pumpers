@@ -4,7 +4,7 @@ defmodule Pumpers.LogsHelper do
   alias Pumpers.Repo
 
   @default_log_name "REQUEST"
-  @request_headers_fields ["REQUEST", "HEADER"]
+  @request_headers_fields ["REQUEST", "HEADER", "BODY", "PARAMETERS"]
 
   def get_log_by_name(name \\ @default_log_name) when is_binary(name) do
     q =

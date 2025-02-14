@@ -23,16 +23,7 @@ defmodule PumpersWeb.Router do
     pipe_through :browser
 
     get "/", PumpersController, :home
-    #   get "/hello", PumpersController, :index
-    #   get "/hello/:messenger", PumpersController, :show
   end
-
-  # scope "/", PumpersWeb do
-  #   pipe_through [:browser, :require_powered_user_role]
-
-  #   resources "/logs", LogsController, only: [:index, :show]
-  #   resources "/monitors", MonitorsController, only: [:index, :show]
-  # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:pumpers, :dev_routes) do
@@ -122,9 +113,9 @@ defmodule PumpersWeb.Router do
 
   ## Defult routes for all other requests
   # alias Pumpers.Live.AdminUsersLive
-  # alias PumpersWeb.NotFound
-  # live_session :not_found, on_mount: [{PumpersWeb.NotFound, :mount}] do
-  #   live(:not_found, NotFoundLive, :new)
+  # alias PumpersWeb.UnknownPath
+  # live_session :unknown_path, on_mount: [{PumpersWeb.UnknownPath, :mount}] do
+  #   live(:unknown_path, NotFoundLive, :new)
   # end
-  match(:*, "/*funny_path", PumpersWeb.NotFound, :not_found)
+  match(:*, "/*unknown_path", PumpersWeb.UnknownPath, :unknown_path)
 end
