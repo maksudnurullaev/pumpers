@@ -1,6 +1,8 @@
 defmodule PumpersWeb.Plugs.SaveRequest do
   import Plug.Conn
 
+  @re_ct_json ~r/json$/i
+
   def init(opts), do: opts
 
   def call(%Plug.Conn{} = conn, _opts) do
@@ -19,8 +21,11 @@ defmodule PumpersWeb.Plugs.SaveRequest do
     conn.req_headers
     |> List.keyfind("content-type", 0)
     |> case do
-      {_, "application/json"} -> true
-      _ -> false
+      {_, content_type} ->
+        Regex.match?(@re_ct_json, content_type)
+
+      _ ->
+        false
     end
   end
 
@@ -43,7 +48,15 @@ defmodule PumpersWeb.Plugs.SaveRequest do
   defp save_body(conn, oid) do
     alias Pumpers.{Repo, Log}
 
-    body = inspect(conn.assigns[:raw_body])
+    body =
+      if(conn.assigns[:raw_body]) do
+        inspect(conn.assigns[:raw_body])
+      else
+        {:ok, body, _conn} = Plug.Conn.read_body(conn)
+        inspect(body)
+      end
+
+    IO.puts("XXX: BODY: #{body}")
 
     o =
       %Log{

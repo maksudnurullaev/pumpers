@@ -7,7 +7,6 @@ defmodule PumpersWeb.LogsLive do
   def render(assigns) do
     ~H"""
     <%= if @details do %>
-      <%!-- <.modal id="details-modal" show={true} on_cancel={JS.push("hide_modal")}> --%>
       <.header>
         <.button_small phx-click="hide_detail" class="ml-2">
           <span aria-hidden="true">&larr;</span>back
@@ -20,13 +19,12 @@ defmodule PumpersWeb.LogsLive do
           <pre>{detail.value}</pre>
         </:col>
       </.table>
-      <%!-- </.modal> --%>
     <% else %>
       <.header>
-        Logs <%!-- - {@show_modal} --%>
+        Logs
       </.header>
 
-      <.form for={@toolbar} phx-submit="get_request_headers">
+      <.form for={@toolbar} phx-submit="set_toolbar">
         <ul class="flex">
           <li class="mr-6">
             <.input
@@ -40,7 +38,7 @@ defmodule PumpersWeb.LogsLive do
           <li class="mr-6">
             <.input
               value={@toolbar["search_text"]}
-              name="my-input"
+              name="search_text"
               type="search"
               placeholder="search text"
             />
