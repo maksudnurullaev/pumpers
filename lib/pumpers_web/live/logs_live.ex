@@ -16,7 +16,7 @@ defmodule PumpersWeb.LogsLive do
       <.table id="details" rows={@details}>
         <:col :let={detail} label="Name">{detail.field}</:col>
         <:col :let={detail} label="Value">
-          <pre>{detail.value}</pre>
+          {detail.value}
         </:col>
       </.table>
     <% else %>
@@ -26,6 +26,15 @@ defmodule PumpersWeb.LogsLive do
 
       <.form for={@toolbar} phx-submit="set_toolbar">
         <ul class="flex">
+          <li class="mr-6">
+            <.input
+              id="logs_page_number_id"
+              name="page_size"
+              type="select"
+              value={@toolbar["page"]}
+              options={1..10}
+            />
+          </li>
           <li class="mr-6">
             <.input
               id="logs_page_size_id"
@@ -44,7 +53,7 @@ defmodule PumpersWeb.LogsLive do
             />
           </li>
           <li class="mr-6">
-            <.button class="mt-2 bg-blue-600 hover:bg-sky-500">
+            <.button data-tooltip-target="tooltip-default" class="mt-2 bg-blue-600 hover:bg-sky-500">
               Search
             </.button>
             <span class="ml-1 cursor-pointer" phx-click={JS.push("update_logs")}>
@@ -73,24 +82,48 @@ defmodule PumpersWeb.LogsLive do
   # end
 
   def mount(_params, _session, socket) do
-    logs = LogsHelper.get_log_by_name()
+    toolbar = %{
+      "page" => 1,
+      "pages" => 1,
+      "page_size" => 25,
+      "search_text" => nil
+    }
+
+    logs = LogsHelper.get_logs(toolbar)
 
     form = [
       logs: logs,
       details: nil,
-      # show_modal: false,
-      toolbar: %{
-        "page_size" => 25,
-        "search_text" => ""
-      }
+      toolbar: toolbar
     ]
 
     {:ok, assign(socket, form)}
   end
 
+  def handle_event("set_toolbar", params, socket) do
+    toolbar = Map.merge(socket.assigns[:toolbar], params)
+
+    if Map.equal?(socket.assigns[:toolbar], toolbar) do
+      put_flash(socket, :info, "No changes!")
+      {:noreply, socket}
+    else
+      logs = LogsHelper.get_logs(toolbar)
+      {:noreply, update(socket, :toolbar, &(&1 = toolbar)) |> update(:logs, &(&1 = logs))}
+    end
+
+    # IO.puts("XXX: #{inspect(toolbar)}")
+    # # logs = LogsHelper.get_logs(params)
+
+    # # {:noreply,
+    # #  update(socket, :toolbar, &(&1 = params))
+    # #  |> update(:logs, &(&1 = logs))}
+    # {:noreply, socket}
+  end
+
   def handle_event("update_logs", _params, socket) do
-    logs = LogsHelper.get_log_by_name()
-    {:noreply, update(socket, :logs, &(&1 = logs))}
+    # logs = LogsHelper.get_log_by_name()
+    # {:noreply, update(socket, :logs, &(&1 = logs))}
+    {:noreply, socket}
   end
 
   def handle_event("hide_detail", _params, socket) do
