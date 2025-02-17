@@ -1,22 +1,4 @@
 defmodule PumpersWeb.Utils do
-  @doc false
-  # defmacro __using__(_opts) do
-  #   quote do
-  #     import __MODULE__
-  #   end
-  # end
-
-  # defmacro check_user_and(socket, do: block) do
-  #   quote do
-  #     if Helper.user_is_valid_by_update_at?(socket.assigns[:current_user]) do
-  #       unquote(block)
-  #     else
-  #       socket = Phoenix.LiveView.put_flash(socket, :error, "User does not have proper rights!")
-  #       {:noreply, Phoenix.LiveView.redirect(socket, to: "/")}
-  #     end
-  #   end
-  # end
-
   def get_limit_offset(%{"page" => page, "page_size" => page_size, "count" => count})
       when is_bitstring(page) and is_bitstring(page_size) and is_bitstring(count) do
     get_limit_offset(%{

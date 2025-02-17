@@ -6,6 +6,7 @@ defmodule PumpersWeb.LogsLive do
   alias Pumpers.LogsHelper
   import PumpersWeb.MyComponents
 
+  # alias PumpersWeb.LiveMacro
 
   def render(assigns) do
     ~H"""
@@ -74,11 +75,7 @@ defmodule PumpersWeb.LogsLive do
         </ul>
       </.form>
 
-      <.table
-        id="logs"
-        rows={@logs}
-        row_click={&JS.push("get_request_headers", value: %{oid: &1.oid})}
-      >
+      <.table id="logs" rows={@logs} row_click={&JS.push("get_log_details", value: %{oid: &1.oid})}>
         <:col :let={log} label="#ID">{log.id}</:col>
         <:col :let={log} label="[HOST]:[METHOD]:[PATH]">{log.value}</:col>
       </.table>
@@ -92,54 +89,79 @@ defmodule PumpersWeb.LogsLive do
   #   |> JS.hide(transition: "fade-out-scale", to: "#modal-content")
   # end
 
-  def mount(_params, _session, socket) do
-    toolbar = %{
-      "page" => "1",
-      "pages" => "1",
-      "page_size" => "25",
-      "count" => "0",
-      "search_path" => "",
-      "search_text" => ""
-    }
+  defmacro check_access_then(socket, do: block) do
+    quote do
+      socket = unquote(socket)
 
-    {:ok, logs, toolbar} = LogsHelper.get_logs(toolbar)
-
-    form = [
-      logs: logs,
-      details: nil,
-      toolbar: toolbar
-    ]
-
-    {:ok, assign(socket, form)}
+      if not Helper.user_is_valid_by_update_at?(socket.assigns[:current_user]) do
+        socket = put_flash(socket, :error, "User does not have proper rights!")
+        {:noreply, redirect(socket, to: ~p"/")}
+      else
+        unquote(block)
+      end
+    end
   end
 
-  def handle_event("set_toolbar", params, socket) do
-    toolbar = Map.merge(socket.assigns[:toolbar], params)
+  def mount(_params, _session, socket) do
+    check_access_then(socket) do
+      toolbar = %{
+        "page" => "1",
+        "pages" => "1",
+        "page_size" => "25",
+        "count" => "0",
+        "search_path" => "",
+        "search_text" => ""
+      }
 
-    if Map.equal?(socket.assigns[:toolbar], toolbar) do
-      # socket = put_flash(socket, :info, "No changes!")
-      {:noreply, socket}
-    else
-      # socket = put_flash(socket, :info, "Has changes!")
+      {:ok, logs, toolbar} = LogsHelper.get_logs(toolbar)
+
+      form = [
+        logs: logs,
+        details: nil,
+        toolbar: toolbar
+      ]
+
+      {:ok, assign(socket, form)}
+    end
+  end
+
+  # if not Helper.user_is_valid_by_update_at?(socket.assigns[:current_user]) do
+  #   socket = put_flash(socket, :error, "User does not have proper rights!")
+  #   {:noreply, redirect(socket, to: ~p"/")}
+  # else
+  # end
+  # end
+
+  def handle_event("set_toolbar", params, socket) do
+    check_access_then(socket) do
+      toolbar = Map.merge(socket.assigns[:toolbar], params)
+
+      if Map.equal?(socket.assigns[:toolbar], toolbar) do
+        {:noreply, socket}
+      else
+        {:ok, logs, toolbar} = LogsHelper.get_logs(toolbar)
+        {:noreply, update(socket, :toolbar, &(&1 = toolbar)) |> update(:logs, &(&1 = logs))}
+      end
+    end
+  end
+
+  def handle_event("set_page", params, socket) do
+    check_access_then(socket) do
+      toolbar = Map.merge(socket.assigns[:toolbar], params)
+
       {:ok, logs, toolbar} = LogsHelper.get_logs(toolbar)
       {:noreply, update(socket, :toolbar, &(&1 = toolbar)) |> update(:logs, &(&1 = logs))}
     end
   end
 
-  def handle_event("set_page", params, socket) do
-    toolbar = Map.merge(socket.assigns[:toolbar], params)
-
-    # socket = put_flash(socket, :info, "Has changes!")
-    {:ok, logs, toolbar} = LogsHelper.get_logs(toolbar)
-    {:noreply, update(socket, :toolbar, &(&1 = toolbar)) |> update(:logs, &(&1 = logs))}
-  end
-
   def handle_event("set_page_size", params, socket) do
-    toolbar = Map.merge(socket.assigns[:toolbar], params)
-    toolbar = Map.put(toolbar, "page", "1")
+    check_access_then(socket) do
+      toolbar = Map.merge(socket.assigns[:toolbar], params)
+      toolbar = Map.put(toolbar, "page", "1")
 
-    {:ok, logs, toolbar} = LogsHelper.get_logs(toolbar)
-    {:noreply, update(socket, :toolbar, &(&1 = toolbar)) |> update(:logs, &(&1 = logs))}
+      {:ok, logs, toolbar} = LogsHelper.get_logs(toolbar)
+      {:noreply, update(socket, :toolbar, &(&1 = toolbar)) |> update(:logs, &(&1 = logs))}
+    end
   end
 
   def handle_event("hide_detail", _params, socket) do
@@ -147,24 +169,13 @@ defmodule PumpersWeb.LogsLive do
   end
 
   def handle_event(
-        "get_request_headers",
+        "get_log_details",
         %{"oid" => oid},
         socket
       ) do
-    # current_user = socket.assigns[:current_user]
-
-
-    # check_user_and socket do
-    #   details = LogsHelper.get_log_details(oid)
-    #   {:noreply, update(socket, :details, &(&1 = details))}
-    # end
-
-    if Helper.user_is_valid_by_update_at?(socket.assigns[:current_user]) do
+    check_access_then(socket) do
       details = LogsHelper.get_log_details(oid)
       {:noreply, update(socket, :details, &(&1 = details))}
-    else
-      socket = put_flash(socket, :error, "User does not have proper rights!")
-      {:noreply, redirect(socket, to: ~p"/")}
     end
   end
 end
