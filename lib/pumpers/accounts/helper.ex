@@ -1,4 +1,5 @@
 defmodule Pumpers.Accounts.Helper do
+  require Logger
   alias Pumpers.Accounts.{Role, User}
   alias Pumpers.Repo
   import Ecto.Query, warn: false
@@ -17,6 +18,11 @@ defmodule Pumpers.Accounts.Helper do
   def user_is_valid_by_update_at?(%{:id => id, :updated_at => updated_at} = _user) do
     user_updated_at = User |> Repo.get!(id) |> Map.get(:updated_at)
     user_updated_at == updated_at
+  end
+
+  def user_is_valid_by_update_at?(_user) do
+    Logger.warning("User is not valid!")
+    false
   end
 
   def change_user_role(user_id, user_role_id_new) when is_integer(user_id) do

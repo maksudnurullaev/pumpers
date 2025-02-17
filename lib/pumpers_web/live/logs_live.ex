@@ -1,8 +1,11 @@
 defmodule PumpersWeb.LogsLive do
+  # use PumpersWeb.Utils
+
   use PumpersWeb, :live_view
   alias Pumpers.Accounts.Helper
   alias Pumpers.LogsHelper
   import PumpersWeb.MyComponents
+
 
   def render(assigns) do
     ~H"""
@@ -21,18 +24,20 @@ defmodule PumpersWeb.LogsLive do
       </.table>
     <% else %>
       <.header>
-        Logs
+        Logs: <u>{String.to_integer(@toolbar["count"])}</u> records
       </.header>
 
-      <.form for={@toolbar} phx-submit="set_toolbar">
+      <.form for={@toolbar} phx-submit="set_toolbar" phx-value-pages={@toolbar["pages"]}>
         <ul class="flex">
           <li class="mr-6">
             <.input
               id="logs_page_number_id"
-              name="page_size"
+              name="page"
               type="select"
               value={@toolbar["page"]}
-              options={1..10}
+              options={1..String.to_integer(@toolbar["pages"])}
+              phx-change={JS.push("set_page")}
+              disabled={@toolbar["pages"] == "1"}
             />
           </li>
           <li class="mr-6">
@@ -42,6 +47,15 @@ defmodule PumpersWeb.LogsLive do
               type="select"
               value={@toolbar["page_size"]}
               options={[25, 50, 100]}
+              phx-change={JS.push("set_page_size")}
+            />
+          </li>
+          <li class="mr-6">
+            <.input
+              value={@toolbar["search_path"]}
+              name="search_path"
+              type="search"
+              placeholder="search path"
             />
           </li>
           <li class="mr-6">
@@ -56,9 +70,6 @@ defmodule PumpersWeb.LogsLive do
             <.button data-tooltip-target="tooltip-default" class="mt-2 bg-blue-600 hover:bg-sky-500">
               Search
             </.button>
-            <span class="ml-1 cursor-pointer" phx-click={JS.push("update_logs")}>
-              <.icon name="hero-arrow-path" class="ml-2 w-3 h-3 spin cursor-hand" />
-            </span>
           </li>
         </ul>
       </.form>
@@ -83,13 +94,15 @@ defmodule PumpersWeb.LogsLive do
 
   def mount(_params, _session, socket) do
     toolbar = %{
-      "page" => 1,
-      "pages" => 1,
-      "page_size" => 25,
-      "search_text" => nil
+      "page" => "1",
+      "pages" => "1",
+      "page_size" => "25",
+      "count" => "0",
+      "search_path" => "",
+      "search_text" => ""
     }
 
-    logs = LogsHelper.get_logs(toolbar)
+    {:ok, logs, toolbar} = LogsHelper.get_logs(toolbar)
 
     form = [
       logs: logs,
@@ -104,26 +117,29 @@ defmodule PumpersWeb.LogsLive do
     toolbar = Map.merge(socket.assigns[:toolbar], params)
 
     if Map.equal?(socket.assigns[:toolbar], toolbar) do
-      put_flash(socket, :info, "No changes!")
+      # socket = put_flash(socket, :info, "No changes!")
       {:noreply, socket}
     else
-      logs = LogsHelper.get_logs(toolbar)
+      # socket = put_flash(socket, :info, "Has changes!")
+      {:ok, logs, toolbar} = LogsHelper.get_logs(toolbar)
       {:noreply, update(socket, :toolbar, &(&1 = toolbar)) |> update(:logs, &(&1 = logs))}
     end
-
-    # IO.puts("XXX: #{inspect(toolbar)}")
-    # # logs = LogsHelper.get_logs(params)
-
-    # # {:noreply,
-    # #  update(socket, :toolbar, &(&1 = params))
-    # #  |> update(:logs, &(&1 = logs))}
-    # {:noreply, socket}
   end
 
-  def handle_event("update_logs", _params, socket) do
-    # logs = LogsHelper.get_log_by_name()
-    # {:noreply, update(socket, :logs, &(&1 = logs))}
-    {:noreply, socket}
+  def handle_event("set_page", params, socket) do
+    toolbar = Map.merge(socket.assigns[:toolbar], params)
+
+    # socket = put_flash(socket, :info, "Has changes!")
+    {:ok, logs, toolbar} = LogsHelper.get_logs(toolbar)
+    {:noreply, update(socket, :toolbar, &(&1 = toolbar)) |> update(:logs, &(&1 = logs))}
+  end
+
+  def handle_event("set_page_size", params, socket) do
+    toolbar = Map.merge(socket.assigns[:toolbar], params)
+    toolbar = Map.put(toolbar, "page", "1")
+
+    {:ok, logs, toolbar} = LogsHelper.get_logs(toolbar)
+    {:noreply, update(socket, :toolbar, &(&1 = toolbar)) |> update(:logs, &(&1 = logs))}
   end
 
   def handle_event("hide_detail", _params, socket) do
@@ -135,9 +151,15 @@ defmodule PumpersWeb.LogsLive do
         %{"oid" => oid},
         socket
       ) do
-    current_user = socket.assigns[:current_user]
+    # current_user = socket.assigns[:current_user]
 
-    if Helper.user_is_valid_by_update_at?(current_user) do
+
+    # check_user_and socket do
+    #   details = LogsHelper.get_log_details(oid)
+    #   {:noreply, update(socket, :details, &(&1 = details))}
+    # end
+
+    if Helper.user_is_valid_by_update_at?(socket.assigns[:current_user]) do
       details = LogsHelper.get_log_details(oid)
       {:noreply, update(socket, :details, &(&1 = details))}
     else

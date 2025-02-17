@@ -10,3 +10,13 @@ DONE: First registered user always should have "Administrators" roles
 DONE: Change riles field name 'admin' to 'is_admin'
 Add [is_admin | is_powered | is_registered] functionality
 Change admin role doesn't work if user already logged in!
+
+Try to make macro like:
+===
+lib/pumpers_web/live/logs_live.ex:
+  def handle_event("get_request_headers", ... )
+===
+    # check_user_and socket do
+    #   details = LogsHelper.get_log_details(oid)
+    #   {:noreply, update(socket, :details, &(&1 = details))}
+    # end
