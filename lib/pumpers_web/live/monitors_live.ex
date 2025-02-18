@@ -1,23 +1,42 @@
 defmodule PumpersWeb.MonitorsLive do
   use PumpersWeb, :live_view
-  # alias Pumpers.Accounts.Helper
+  import PumpersWeb.Components.Monitors
+
+  @modes [:list, :edit, :add]
 
   def render(assigns) do
     ~H"""
-    <.header>
-      Monitors <strong>{@monitors}</strong>
-    </.header>
+    <%= case assigns.mode do %>
+      <% :list -> %>
+        <.monitor_list />
+      <% _ -> %>
+        <.monitor_form monitor={assigns.monitor} />
+    <% end %>
     """
   end
 
-  def mount(_params, _session, socket) do
-    # form = %{
-    #   "users" => Helper.get_all_users_vs_role_id(),
-    #   "roles" => Helper.get_all_roles_as_map()
-    # }
+  def is_mode?(mode, assigns) when is_atom(mode) and mode in @modes do
+    assigns.mode == mode
+  end
 
-    # {:ok, assign(socket, form: form)}
-    {:ok, assign(socket, monitors: "mount")}
+  def mount(_params, _session, socket) do
+    monitor = %{
+      "protocol" => "HTTP",
+      "method" => "GET",
+      "url" => "",
+      "result" => ""
+    }
+
+    {:ok, assign(socket, monitor: monitor, mode: :list)}
+    # {:ok, assign(socket, monitors: "mount")}
+  end
+
+  def handle_event("add_monitor_form", _params, socket) do
+    {:noreply, update(socket, :mode, &(&1 = :add))}
+  end
+
+  def handle_event("list_monitors", _params, socket) do
+    {:noreply, update(socket, :mode, &(&1 = :list))}
   end
 
   # def handle_event(

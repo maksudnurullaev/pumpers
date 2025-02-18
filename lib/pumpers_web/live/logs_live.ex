@@ -4,7 +4,7 @@ defmodule PumpersWeb.LogsLive do
   use PumpersWeb, :live_view
   alias Pumpers.Accounts.Helper
   alias Pumpers.LogsHelper
-  import PumpersWeb.MyComponents
+  import PumpersWeb.Components.MyComponents
 
   # alias PumpersWeb.LiveMacro
 

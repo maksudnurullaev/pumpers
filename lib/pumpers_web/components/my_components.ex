@@ -1,4 +1,4 @@
-defmodule PumpersWeb.MyComponents do
+defmodule PumpersWeb.Components.MyComponents do
   use Phoenix.Component
 @doc """
   Renders a small button.
@@ -19,7 +19,7 @@ defmodule PumpersWeb.MyComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-full bg-gray-400 hover:bg-gray-300 py-0 px-2",
+        "phx-submit-loading:opacity-75 rounded-full bg-blue-400 hover:bg-blue-300 py-0 px-2",
         "text-sm font-semibold leading-6 text-white active:text-white/80",
         @class
       ]}
