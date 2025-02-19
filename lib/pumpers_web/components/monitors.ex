@@ -7,7 +7,9 @@ defmodule PumpersWeb.Components.Monitors do
     ~H"""
     <.header>
       Monitors
-      <.button_small phx-click="add_monitor_form">Add</.button_small>
+      <.button_small phx-click="add_monitor_form">
+        add <span aria-hidden="true">&rarr;</span>
+      </.button_small>
     </.header>
     """
   end
@@ -28,17 +30,9 @@ defmodule PumpersWeb.Components.Monitors do
         type="text"
         label="URL:"
         value={@monitor["url"]}
+        errors={@errors["url"]}
         placeholder="http://example.com/test/path"
-      />
-
-      <.input
-        id="monitor_protocol"
-        name="protocol"
-        type="select"
-        label="Protocol:"
-        value={@monitor["protocol"]}
-        options={["HTTP", "HTTPS"]}
-        disabled={true}
+        phx-blur="validate_url"
       />
       <.input
         id="monitor_method"
@@ -56,7 +50,7 @@ defmodule PumpersWeb.Components.Monitors do
         value={@monitor["result"]}
       />
       <div class="mt-2 text-right">
-      <.button type="submit" class="bg-blue-700 hover:bg-blue-500">Save</.button>
+        <.button type="submit" class="bg-blue-700 hover:bg-blue-500">Save</.button>
       </div>
     </.form>
     """

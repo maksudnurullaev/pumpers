@@ -1,4 +1,5 @@
 defmodule PumpersWeb.MonitorsLive do
+  alias PumpersWeb.Utils
   use PumpersWeb, :live_view
   import PumpersWeb.Components.Monitors
 
@@ -10,7 +11,7 @@ defmodule PumpersWeb.MonitorsLive do
       <% :list -> %>
         <.monitor_list />
       <% _ -> %>
-        <.monitor_form monitor={assigns.monitor} />
+        <.monitor_form monitor={assigns.monitor} errors={assigns.errors} />
     <% end %>
     """
   end
@@ -20,15 +21,33 @@ defmodule PumpersWeb.MonitorsLive do
   end
 
   def mount(_params, _session, socket) do
-    monitor = %{
-      "protocol" => "HTTP",
-      "method" => "GET",
-      "url" => "",
-      "result" => ""
-    }
+    monitor = %{"method" => "GET", "url" => "", "result" => ""}
 
-    {:ok, assign(socket, monitor: monitor, mode: :list)}
-    # {:ok, assign(socket, monitors: "mount")}
+    errors = %{"url" => []}
+    {:ok, assign(socket, monitor: monitor, mode: :add, errors: errors)}
+  end
+
+  def handle_event("validate_url", %{"value" => url_string} = _params, socket) do
+    monitor = Map.put(socket.assigns.monitor, "url", url_string)
+
+    case Utils.is_valid_url?(url_string) do
+      {:ok, uri} ->
+        errors = Map.put(socket.assigns.errors, "url", [])
+        {:noreply, socket |> update(:monitor, &(&1 = monitor)) |> update(:errors, &(&1 = errors))}
+
+      {:error, _} ->
+        errors = Map.put(socket.assigns.errors, "url", ["Invalid URL"])
+        {:noreply, socket |> update(:monitor, &(&1 = monitor)) |> update(:errors, &(&1 = errors))}
+    end
+
+    # errors =
+    #   if  do
+    #     Map.put(socket.assigns.errors, "url", [])
+    #   else
+    #     Map.put(socket.assigns.errors, "url", ["Invalid URL"])
+    #   end
+
+    # {:noreply, socket |> update(:monitor, &(&1 = monitor)) |> update(:errors, &(&1 = errors))}
   end
 
   def handle_event("add_monitor_form", _params, socket) do
@@ -38,20 +57,4 @@ defmodule PumpersWeb.MonitorsLive do
   def handle_event("list_monitors", _params, socket) do
     {:noreply, update(socket, :mode, &(&1 = :list))}
   end
-
-  # def handle_event(
-  #       "change_role",
-  #       %{"user_id" => user_id, "user_role_id_new" => user_role_id_new},
-  #       socket
-  #     ) do
-  #   if Helper.user_is_valid_by_update_at?(socket.assigns[:current_user]) do
-  #     Helper.change_user_role(user_id, user_role_id_new)
-  #     socket = put_flash(socket, :info, "Role changed!")
-  #     form = Map.put(socket.assigns.form, "users", Helper.get_all_users_vs_role_id())
-  #     {:noreply, update(socket, :form, &(&1 = form))}
-  #   else
-  #     socket = put_flash(socket, :error, "User does not have proper rights!")
-  #     {:noreply, redirect(socket, to: ~p"/")}
-  #   end
-  # end
 end

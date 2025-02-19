@@ -43,4 +43,10 @@ defmodule PumpersWeb.Utils do
   def string_nil_or_empty?(str) do
     str |> String.trim() |> String.length() == 0
   end
+
+  @schemes ["http", "https"]
+  def is_valid_url?(url) do
+    uri = URI.parse(url)
+    if uri.scheme != nil && uri.scheme in @schemes && uri.host =~ ".", do: {:ok, uri}, else: {:error, uri}
+  end
 end

@@ -12,10 +12,10 @@ defmodule PumpersWeb.LogsLive do
     ~H"""
     <%= if @details do %>
       <.header>
-        <.button_small phx-click="hide_detail" class="ml-2">
+        Request headers
+        <.button_small phx-click="hide_detail">
           <span aria-hidden="true">&larr;</span>back
         </.button_small>
-        Request headers
       </.header>
       <.table id="details" rows={@details}>
         <:col :let={detail} label="Name">{detail.field}</:col>
