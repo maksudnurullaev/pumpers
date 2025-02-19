@@ -21,7 +21,7 @@ defmodule PumpersWeb.MonitorsLive do
   end
 
   def mount(_params, _session, socket) do
-    monitor = %{"method" => "GET", "url" => "", "result" => ""}
+    monitor = %{"method" => "GET", "url" => "", "post_data" => "", "result" => ""}
 
     errors = %{"url" => []}
     {:ok, assign(socket, monitor: monitor, mode: :add, errors: errors)}
@@ -31,7 +31,7 @@ defmodule PumpersWeb.MonitorsLive do
     monitor = Map.put(socket.assigns.monitor, "url", url_string)
 
     case Utils.is_valid_url?(url_string) do
-      {:ok, uri} ->
+      {:ok, _uri} ->
         errors = Map.put(socket.assigns.errors, "url", [])
         {:noreply, socket |> update(:monitor, &(&1 = monitor)) |> update(:errors, &(&1 = errors))}
 
@@ -39,15 +39,11 @@ defmodule PumpersWeb.MonitorsLive do
         errors = Map.put(socket.assigns.errors, "url", ["Invalid URL"])
         {:noreply, socket |> update(:monitor, &(&1 = monitor)) |> update(:errors, &(&1 = errors))}
     end
+  end
 
-    # errors =
-    #   if  do
-    #     Map.put(socket.assigns.errors, "url", [])
-    #   else
-    #     Map.put(socket.assigns.errors, "url", ["Invalid URL"])
-    #   end
-
-    # {:noreply, socket |> update(:monitor, &(&1 = monitor)) |> update(:errors, &(&1 = errors))}
+  def handle_event("set_method", %{"method" => method}, socket) do
+    monitor = Map.put(socket.assigns.monitor, "method", method)
+    {:noreply, update(socket, :monitor, &(&1 = monitor))}
   end
 
   def handle_event("add_monitor_form", _params, socket) do

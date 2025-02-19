@@ -2,6 +2,7 @@ defmodule PumpersWeb.Components.Monitors do
   use Phoenix.Component
   import PumpersWeb.CoreComponents
   import PumpersWeb.Components.MyComponents
+  alias Phoenix.LiveView.JS
 
   def monitor_list(assigns) do
     ~H"""
@@ -40,8 +41,18 @@ defmodule PumpersWeb.Components.Monitors do
         type="select"
         label="Method:"
         value={@monitor["method"]}
-        options={["GET", "POST", "PUT", "DELETE"]}
+        options={["GET", "POST"]}
+        phx-change={JS.push("set_method")}
       />
+      <%= if @monitor["method"] == "POST" do %>
+        <.input
+          id="monitor_post_data"
+          name="post_data"
+          type="textarea"
+          label="Post data:"
+          value={@monitor["post_data"]}
+        />
+      <% end %>
       <.input
         id="monitor_result"
         name="result"
