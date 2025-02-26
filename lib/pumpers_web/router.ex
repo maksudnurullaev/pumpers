@@ -89,7 +89,10 @@ defmodule PumpersWeb.Router do
         {PumpersWeb.UserAuth, :require_powered_user_role}
       ] do
       live "/logs/live", LogsLive, :new
-      live "/monitors/live", MonitorsLive, :new
+      live "/monitors", MonitorLive.Index, :index
+      live "/monitors/new", MonitorLive.Index, :new
+      live "/monitors/:id", MonitorLive.Show, :show
+      live "/monitors/:id/edit", MonitorLive.Show, :edit
     end
   end
 
