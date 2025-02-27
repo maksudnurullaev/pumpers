@@ -56,8 +56,6 @@ defmodule PumpersWeb.Plugs.SaveRequest do
         inspect(body)
       end
 
-    IO.puts("XXX: BODY: #{body}")
-
     o =
       %Log{
         oid: oid,

@@ -10,7 +10,7 @@
 <.table
   id="monitors"
   rows={@streams.monitors}
-  row_click={fn {_id, monitor} -> JS.navigate(~p"/monitors/#{monitor}") end}
+  row_click={fn {_id, monitor} -> JS.navigate(~p"/monitors/#{monitor}/show") end}
 >
   <:col :let={{_id, monitor}} label="Url">{monitor.url}</:col>
   <:col :let={{_id, monitor}} label="Method">{monitor.method}</:col>

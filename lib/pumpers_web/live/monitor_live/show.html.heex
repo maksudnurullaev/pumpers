@@ -2,7 +2,7 @@
   Monitor #{@monitor.id}
   <:subtitle>This is a monitor record from your database.</:subtitle>
   <:actions>
-    <.link patch={~p"/monitors/#{@monitor}/edit"} phx-click={JS.push_focus()}>
+    <.link patch={~p"/monitors/#{@monitor}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit monitor</.button>
     </.link>
   </:actions>
@@ -17,13 +17,13 @@
 
 <.back navigate={~p"/monitors"}>Back to monitors</.back>
 
-<.modal :if={@live_action == :edit} id="monitor-modal" show on_cancel={JS.patch(~p"/monitors/#{@monitor}")}>
+<.modal :if={@live_action == :edit} id="monitor-modal" show on_cancel={JS.patch(~p"/monitors/#{@monitor}/show")}>
   <.live_component
     module={PumpersWeb.MonitorLive.FormComponent}
     id={@monitor.id}
     title={@page_title}
     action={@live_action}
     monitor={@monitor}
-    patch={~p"/monitors/#{@monitor}"}
+    patch={~p"/monitors/#{@monitor}/show"}
   />
 </.modal>

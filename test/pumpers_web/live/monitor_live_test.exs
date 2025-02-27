@@ -76,6 +76,8 @@ defmodule PumpersWeb.MonitorLiveTest do
     test "updates monitor in listing", %{conn: conn, monitor: monitor} do
       {:ok, index_live, _html} = live(conn, ~p"/monitors")
 
+      assert index_live |> element("#monitors-#{monitor.id} a", "Edit") |> has_element?()
+
       assert index_live |> element("#monitors-#{monitor.id} a", "Edit") |> render_click() =~
                "Edit Monitor"
 
@@ -108,19 +110,19 @@ defmodule PumpersWeb.MonitorLiveTest do
     setup [:create_monitor, :setup_admin_access]
 
     test "displays monitor", %{conn: conn, monitor: monitor} do
-      {:ok, _show_live, html} = live(conn, ~p"/monitors/#{monitor}")
+      {:ok, _show_live, html} = live(conn, ~p"/monitors/#{monitor}/show")
 
       assert html =~ "Show Monitor"
       assert html =~ monitor.result
     end
 
     test "updates monitor within modal", %{conn: conn, monitor: monitor} do
-      {:ok, show_live, _html} = live(conn, ~p"/monitors/#{monitor}")
+      {:ok, show_live, _html} = live(conn, ~p"/monitors/#{monitor}/show")
 
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Monitor"
 
-      assert_patch(show_live, ~p"/monitors/#{monitor}/edit")
+      assert_patch(show_live, ~p"/monitors/#{monitor}/show/edit")
 
       assert show_live
              |> form("#monitor-form", monitor: @invalid_attrs)
@@ -130,7 +132,7 @@ defmodule PumpersWeb.MonitorLiveTest do
              |> form("#monitor-form", monitor: @update_attrs)
              |> render_submit()
 
-      assert_patch(show_live, ~p"/monitors/#{monitor}")
+      assert_patch(show_live, ~p"/monitors/#{monitor}/show")
 
       html = render(show_live)
       assert html =~ "Monitor updated successfully"
