@@ -1,6 +1,7 @@
 defmodule PumpersWeb.Components.MyComponents do
   use Phoenix.Component
-@doc """
+
+  @doc """
   Renders a small button.
 
   ## Examples
@@ -30,4 +31,35 @@ defmodule PumpersWeb.Components.MyComponents do
     """
   end
 
+  # Just for testing...
+  slot :column, doc: "Columns with column labels" do
+    attr :label, :string, required: true, doc: "Column label"
+  end
+
+  attr :rows, :list, default: []
+
+  def ttable(assigns) do
+    ~H"""
+    <table>
+      <tr>
+        <th :for={col <- @column}>{col.label}</th>
+      </tr>
+      <tr :for={row <- @rows}>
+        <td :for={col <- @column}>{render_slot(col, row)}</td>
+      </tr>
+    </table>
+    """
+  end
+
+  slot :inner_block, required: true
+
+  attr :entries, :list, default: []
+
+  def unordered_list(assigns) do
+    ~H"""
+    <ul>
+      <li :for={entry <- @entries}>{render_slot(@inner_block, entry)}</li>
+    </ul>
+    """
+  end
 end

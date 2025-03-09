@@ -9,6 +9,46 @@ defmodule PumpersWeb.MonitorLive.Index do
     {:ok, stream(socket, :monitors, Monitors.list_monitors())}
   end
 
+  # handle_event("cb_click", %{"id" => 1, "value" => "true"}
+  # def handle_event("cb_click", %{"id" => id, "value" => _checked}, socket) do
+  #   socket = assign_new(socket, :checked_monitors, fn -> [] end)
+  #   socket = assign(socket, checked_monitors: [id | socket.assigns.checked_monitors])
+  #   IO.puts(inspect(socket.assigns.checked_monitors))
+  #   {:noreply, socket}
+  # end
+
+  @impl true
+  def handle_event(action, params, socket) do
+    socket =
+      case action do
+        "cb_click" ->
+          handle_cb_click(params, socket)
+
+        "delete" ->
+          handle_delete(params, socket)
+
+        _ ->
+          IO.warn("Unknown action: #{action}")
+          socket
+      end
+
+    {:noreply, socket}
+  end
+
+  def handle_cb_click(%{"id" => id} = params, socket) do
+    socket = assign_new(socket, :checked_monitors, fn -> [] end)
+
+    socket =
+      if params["value"] do
+        assign(socket, checked_monitors: [id | socket.assigns.checked_monitors])
+      else
+        assign(socket, checked_monitors: List.delete(socket.assigns.checked_monitors, id))
+      end
+
+    IO.puts(inspect(socket.assigns.checked_monitors))
+    socket
+  end
+
   @impl true
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
@@ -37,11 +77,10 @@ defmodule PumpersWeb.MonitorLive.Index do
     {:noreply, stream_insert(socket, :monitors, monitor)}
   end
 
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_delete(%{"id" => id}, socket) do
     monitor = Monitors.get_monitor!(id)
     {:ok, _} = Monitors.delete_monitor(monitor)
 
-    {:noreply, stream_delete(socket, :monitors, monitor)}
+    stream_delete(socket, :monitors, monitor)
   end
 end

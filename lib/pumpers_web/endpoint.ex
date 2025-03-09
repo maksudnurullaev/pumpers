@@ -8,6 +8,9 @@ defmodule PumpersWeb.Endpoint do
     store: :cookie,
     key: "_pumpers_key",
     signing_salt: "W6PO+B8J",
+    encryption_salt: "#gdOb..xW'4&",
+    http_only: true,
+    max_age: 86400,
     same_site: "Lax"
   ]
 

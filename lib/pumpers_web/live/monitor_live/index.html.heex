@@ -1,25 +1,35 @@
 <.header>
   Listing Monitors
   <:actions>
+    <.link
+      :if={assigns[:checked_monitors] && length(@checked_monitors) != 0}
+      phx-click={JS.push("test_monitors")}
+    >
+      <.button>Test Monitor</.button>
+    </.link>
     <.link patch={~p"/monitors/new"}>
       <.button>New Monitor</.button>
     </.link>
   </:actions>
 </.header>
 
-<.table
-  id="monitors"
-  rows={@streams.monitors}
-  row_click={fn {_id, monitor} -> JS.navigate(~p"/monitors/#{monitor}/show") end}
->
+<.table id="monitors" rows={@streams.monitors}>
+  <:col :let={{_id, monitor}} label="#">
+    <.input
+      type="checkbox"
+      name="cb_group[]"
+      id={"cb_id_#{monitor.id}"}
+      phx-click={JS.push("cb_click", value: %{id: monitor.id})}
+    />
+  </:col>
   <:col :let={{_id, monitor}} label="Url">{monitor.url}</:col>
   <:col :let={{_id, monitor}} label="Method">{monitor.method}</:col>
   <:col :let={{_id, monitor}} label="Post data">{monitor.post_data}</:col>
   <:col :let={{_id, monitor}} label="Result">{monitor.result}</:col>
   <:action :let={{_id, monitor}}>
-    <div class="sr-only">
-      <.link navigate={~p"/monitors/#{monitor}"}>Show</.link>
-    </div>
+    <.link navigate={~p"/monitors/#{monitor}/show"}>Show</.link>
+  </:action>
+  <:action :let={{_id, monitor}}>
     <.link patch={~p"/monitors/#{monitor}/edit"}>Edit</.link>
   </:action>
   <:action :let={{id, monitor}}>
@@ -32,7 +42,12 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="monitor-modal" show on_cancel={JS.patch(~p"/monitors")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="monitor-modal"
+  show
+  on_cancel={JS.patch(~p"/monitors")}
+>
   <.live_component
     module={PumpersWeb.MonitorLive.FormComponent}
     id={@monitor.id || :new}

@@ -11,7 +11,6 @@ defmodule PumpersWeb.MonitorLive.FormComponent do
         {@title}
         <:subtitle>Use this form to manage monitor records in your database.</:subtitle>
       </.header>
-
       <.simple_form
         for={@form}
         id="monitor-form"
@@ -27,7 +26,7 @@ defmodule PumpersWeb.MonitorLive.FormComponent do
           options={Ecto.Enum.values(Pumpers.Monitors.Monitor, :method)}
         />
         <.input field={@form[:post_data]} type="textarea" label="Post data" />
-        <.input field={@form[:result]} type="textarea" label="Result" readonly/>
+        <.input field={@form[:result]} type="textarea" label="Result" readonly />
         <:actions>
           <.button phx-disable-with="Saving...">Save Monitor</.button>
         </:actions>
