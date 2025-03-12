@@ -2,6 +2,7 @@ defmodule PumpersWeb.MonitorLive.Show do
   use PumpersWeb, :live_view
 
   alias Pumpers.Monitors
+  alias Pumpers.Utils.Monitoring
 
   @impl true
   def mount(_params, _session, socket) do
@@ -18,4 +19,15 @@ defmodule PumpersWeb.MonitorLive.Show do
 
   defp page_title(:show), do: "Show Monitor"
   defp page_title(:edit), do: "Edit Monitor"
+
+  @impl true
+  def handle_event("test_monitor", %{"id" => id}, socket) do
+    case Monitoring.test_monitor(Monitors.get_monitor!(id)) do
+      {:ok, result} ->
+        {:noreply, socket |> assign(:result, "#{inspect(result)}")}
+
+      {:error, reason} ->
+        {:noreply, socket |> assign(:result, "Error: #{reason}")}
+    end
+  end
 end

@@ -5,6 +5,9 @@
     <.link patch={~p"/monitors/#{@monitor}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit monitor</.button>
     </.link>
+    <.link phx-click={JS.push("test_monitor", value: %{id: @monitor.id}) |> JS.push_focus()}>
+      <.button class="bg-green-700 hover:bg-green-500">Test me</.button>
+    </.link>
   </:actions>
 </.header>
 
@@ -15,9 +18,27 @@
   <:item title="Result">{@monitor.result}</:item>
 </.list>
 
+<hr />
+
+<span :if={assigns[:result]}>{@result}</span>
+
+<hr />
+
+<textarea
+  :if={assigns[:result]}
+  class="w-full h-32 bg-red-600 text-white"
+  readonly
+  placeholder="Response"
+>{@result}</textarea>
+
 <.back navigate={~p"/monitors"}>Back to monitors</.back>
 
-<.modal :if={@live_action == :edit} id="monitor-modal" show on_cancel={JS.patch(~p"/monitors/#{@monitor}/show")}>
+<.modal
+  :if={@live_action == :edit}
+  id="monitor-modal"
+  show
+  on_cancel={JS.patch(~p"/monitors/#{@monitor}/show")}
+>
   <.live_component
     module={PumpersWeb.MonitorLive.FormComponent}
     id={@monitor.id}
