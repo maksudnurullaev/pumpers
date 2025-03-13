@@ -6,18 +6,18 @@ defmodule PumpersWeb.MonitorLiveTest do
   import Pumpers.AccountsFixtures
 
   @create_attrs %{
-    result: "some result",
+    response: "some response",
     url: "some url",
     method: :get,
     post_data: "some post_data"
   }
   @update_attrs %{
-    result: "some updated result",
+    response: "some updated response",
     url: "some updated url",
     method: :post,
     post_data: "some updated post_data"
   }
-  @invalid_attrs %{result: nil, url: nil, method: :get, post_data: nil}
+  @invalid_attrs %{url: nil, method: :get}
 
   defp create_monitor(_context) do
     monitor = monitor_fixture()
@@ -47,7 +47,7 @@ defmodule PumpersWeb.MonitorLiveTest do
       {:ok, _index_live, html} = live(conn, ~p"/monitors")
 
       assert html =~ "Listing Monitors"
-      assert html =~ monitor.result
+      assert html =~ monitor.url
     end
 
     test "saves new monitor", %{conn: conn} do
@@ -70,7 +70,7 @@ defmodule PumpersWeb.MonitorLiveTest do
 
       html = render(index_live)
       assert html =~ "Monitor created successfully"
-      assert html =~ "some result"
+      assert html =~ "some url"
     end
 
     test "updates monitor in listing", %{conn: conn, monitor: monitor} do
@@ -95,7 +95,7 @@ defmodule PumpersWeb.MonitorLiveTest do
 
       html = render(index_live)
       assert html =~ "Monitor updated successfully"
-      assert html =~ "some updated result"
+      assert html =~ "some updated url"
     end
 
     test "deletes monitor in listing", %{conn: conn, monitor: monitor} do
@@ -113,7 +113,7 @@ defmodule PumpersWeb.MonitorLiveTest do
       {:ok, _show_live, html} = live(conn, ~p"/monitors/#{monitor}/show")
 
       assert html =~ "Show Monitor"
-      assert html =~ monitor.result
+      assert html =~ monitor.response
     end
 
     test "updates monitor within modal", %{conn: conn, monitor: monitor} do
@@ -136,7 +136,7 @@ defmodule PumpersWeb.MonitorLiveTest do
 
       html = render(show_live)
       assert html =~ "Monitor updated successfully"
-      assert html =~ "some updated result"
+      assert html =~ "some updated response"
     end
   end
 end

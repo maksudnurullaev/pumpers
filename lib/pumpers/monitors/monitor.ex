@@ -3,10 +3,12 @@ defmodule Pumpers.Monitors.Monitor do
   import Ecto.Changeset
 
   schema "monitors" do
-    field :result, :string
     field :url, :string
     field :method, Ecto.Enum, values: [:get, :post], default: :get
     field :post_data, :string
+    # Response from the server
+    field :status_code, :integer
+    field :response, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -14,7 +16,7 @@ defmodule Pumpers.Monitors.Monitor do
   @doc false
   def changeset(monitor, attrs) do
     monitor
-    |> cast(attrs, [:url, :method, :post_data, :result])
+    |> cast(attrs, [:url, :method, :post_data, :status_code, :response])
     |> validate_required([:url, :method])
     |> validate_post_data()
   end

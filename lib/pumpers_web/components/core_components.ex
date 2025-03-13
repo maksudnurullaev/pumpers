@@ -540,8 +540,12 @@ defmodule PumpersWeb.CoreComponents do
     <div class="mt-14">
       <dl class="-my-4 divide-y divide-zinc-100">
         <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
-          <dt class="w-1/4 flex-none text-zinc-500">{item.title}</dt>
-          <dd class="text-zinc-700">{render_slot(item)}</dd>
+          <%= if re = Regex.run(~r/DEVIDE_R:\s(.*)/, item.title) do %>
+            <dt class="w-full text-center text-zinc-500" colspan="2">{tl(re)}</dt>
+          <% else %>
+            <dt class="w-1/5 flex-none font-bold text-right text-zinc-500">{item.title}:</dt>
+            <dd class="w-4/5 text-zinc-700">{render_slot(item)}</dd>
+          <% end %>
         </div>
       </dl>
     </div>

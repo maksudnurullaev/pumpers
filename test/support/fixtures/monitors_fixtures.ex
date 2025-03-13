@@ -13,7 +13,7 @@ defmodule Pumpers.MonitorsFixtures do
       |> Enum.into(%{
         method: :get,
         post_data: "some post_data",
-        result: "some result",
+        response: "some response",
         url: "some url"
       })
       |> Pumpers.Monitors.create_monitor()

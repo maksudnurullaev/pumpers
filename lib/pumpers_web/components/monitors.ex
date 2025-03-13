@@ -54,11 +54,11 @@ defmodule PumpersWeb.Components.Monitors do
         />
       <% end %>
       <.input
-        id="monitor_result"
-        name="result"
+        id="monitor_response"
+        name="response"
         type="textarea"
-        label="Expected result:"
-        value={@monitor["result"]}
+        label="Expected response:"
+        value={@monitor["response"]}
       />
       <div class="mt-2 text-right">
         <.button type="submit" class="bg-blue-700 hover:bg-blue-500">Save</.button>

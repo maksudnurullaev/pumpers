@@ -24,8 +24,7 @@
   </:col>
   <:col :let={{_id, monitor}} label="Url">{monitor.url}</:col>
   <:col :let={{_id, monitor}} label="Method">{monitor.method}</:col>
-  <:col :let={{_id, monitor}} label="Post data">{monitor.post_data}</:col>
-  <:col :let={{_id, monitor}} label="Result">{monitor.result}</:col>
+  <:col :let={{_id, monitor}} label="Last status code">{monitor.status_code}</:col>
   <:action :let={{_id, monitor}}>
     <.link navigate={~p"/monitors/#{monitor}/show"}>Show</.link>
   </:action>

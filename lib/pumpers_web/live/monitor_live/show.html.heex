@@ -1,6 +1,6 @@
 <.header>
-  Monitor #{@monitor.id}
-  <:subtitle>This is a monitor record from your database.</:subtitle>
+  Show monitor
+  <:subtitle>This is a monitor with ID: {@monitor.id}</:subtitle>
   <:actions>
     <.link patch={~p"/monitors/#{@monitor}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit monitor</.button>
@@ -14,22 +14,21 @@
 <.list>
   <:item title="Url">{@monitor.url}</:item>
   <:item title="Method">{@monitor.method}</:item>
-  <:item title="Post data">{@monitor.post_data}</:item>
-  <:item title="Result">{@monitor.result}</:item>
+  <:item :if={@monitor.method == :post } title="Post data">{@monitor.post_data}</:item>
+  <:item title="DEVIDE_R: Response" />
+  <:item title="Code"><u>{@monitor.status_code}</u></:item>
+  <:item title="Result">
+    <textarea
+      class={
+        if @monitor.status_code == 200,
+          do: "w-full h-32 bg-green-600 text-white",
+          else: "w-full h-32 bg-red-600 text-white"
+      }
+      readonly
+      placeholder="Response"
+    >{@monitor.response}</textarea>
+  </:item>
 </.list>
-
-<hr />
-
-<span :if={assigns[:result]}>{@result}</span>
-
-<hr />
-
-<textarea
-  :if={assigns[:result]}
-  class="w-full h-32 bg-red-600 text-white"
-  readonly
-  placeholder="Response"
->{@result}</textarea>
 
 <.back navigate={~p"/monitors"}>Back to monitors</.back>
 

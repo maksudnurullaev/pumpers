@@ -8,7 +8,7 @@ defmodule Pumpers.MonitorsTest do
 
     import Pumpers.MonitorsFixtures
 
-    @invalid_attrs %{result: nil, url: nil, method: nil, post_data: nil}
+    @invalid_attrs %{url: nil, method: nil}
 
     test "list_monitors/0 returns all monitors" do
       monitor = monitor_fixture()
@@ -21,13 +21,11 @@ defmodule Pumpers.MonitorsTest do
     end
 
     test "create_monitor/1 with valid data creates a monitor" do
-      valid_attrs = %{result: "some result", url: "some url", method: :get, post_data: "some post_data"}
+      valid_attrs = %{url: "some url", method: :get}
 
       assert {:ok, %Monitor{} = monitor} = Monitors.create_monitor(valid_attrs)
-      assert monitor.result == "some result"
       assert monitor.url == "some url"
       assert monitor.method == :get
-      assert monitor.post_data == "some post_data"
     end
 
     test "create_monitor/1 with invalid data returns error changeset" do
@@ -36,10 +34,10 @@ defmodule Pumpers.MonitorsTest do
 
     test "update_monitor/2 with valid data updates the monitor" do
       monitor = monitor_fixture()
-      update_attrs = %{result: "some updated result", url: "some updated url", method: :post, post_data: "some updated post_data"}
+      update_attrs = %{response: "some updated response", url: "some updated url", method: :post, post_data: "some updated post_data"}
 
       assert {:ok, %Monitor{} = monitor} = Monitors.update_monitor(monitor, update_attrs)
-      assert monitor.result == "some updated result"
+      assert monitor.response == "some updated response"
       assert monitor.url == "some updated url"
       assert monitor.method == :post
       assert monitor.post_data == "some updated post_data"

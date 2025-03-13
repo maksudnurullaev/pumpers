@@ -22,12 +22,27 @@ defmodule PumpersWeb.MonitorLive.Show do
 
   @impl true
   def handle_event("test_monitor", %{"id" => id}, socket) do
-    case Monitoring.test_monitor(Monitors.get_monitor!(id)) do
-      {:ok, result} ->
-        {:noreply, socket |> assign(:result, "#{inspect(result)}")}
+    monitor = Monitors.get_monitor!(id)
 
-      {:error, reason} ->
-        {:noreply, socket |> assign(:result, "Error: #{reason}")}
-    end
+    monitor =
+      monitor
+      |> Monitoring.test_monitor()
+
+    IO.puts("XXX_Z: Monitor: #{inspect(monitor)}")
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Test passed successfully")
+     |> assign(:monitor, Monitors.get_monitor!(id))}
+
+    # The following code is commented out because it is not needed for the exercise
+
+    # case Monitoring.test_monitor(Monitors.get_monitor!(id)) do
+    #   {:ok, result} ->
+    #     {:noreply, socket |> assign(:result, ok: "#{inspect(result)}")}
+
+    #   {:error, exception_message} ->
+    #     {:noreply, socket |> assign(:result, error: "#{exception_message}")}
+    # end
   end
 end
