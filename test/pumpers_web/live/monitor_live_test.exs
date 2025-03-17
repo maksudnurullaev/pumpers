@@ -11,6 +11,11 @@ defmodule PumpersWeb.MonitorLiveTest do
     method: :get
   }
 
+  @update_attrs %{
+    url: MonitorsFixtures.valid_url(),
+    method: :get
+  }
+
   @update_method2post %{
     method: :post
   }
@@ -139,15 +144,15 @@ defmodule PumpersWeb.MonitorLiveTest do
              |> form("#monitor-form", monitor: @invalid_attrs)
              |> render_change() =~ "can&#39;t be blank"
 
-      # assert show_live
-      #        |> form("#monitor-form", monitor: @update_attrs)
-      #        |> render_submit()
+      assert show_live
+             |> form("#monitor-form", monitor: @update_attrs)
+             |> render_submit()
 
-      # assert_patch(show_live, ~p"/monitors/#{monitor}/show")
+      assert_patch(show_live, ~p"/monitors/#{monitor}/show")
 
-      # html = render(show_live)
-      # assert html =~ "Monitor updated successfully"
-      # assert html =~ MonitorsFixtures.valid_url()
+      html = render(show_live)
+      assert html =~ "Monitor updated successfully"
+      assert html =~ MonitorsFixtures.valid_url()
     end
   end
 end
