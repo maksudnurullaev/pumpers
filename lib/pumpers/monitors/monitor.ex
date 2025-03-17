@@ -25,8 +25,8 @@ defmodule Pumpers.Monitors.Monitor do
     case get_field(changeset, :method) do
       :post ->
         case get_field(changeset, :post_data) do
-          nil -> add_error(changeset, :post_data, "is required for POST requests")
-          "" -> add_error(changeset, :post_data, "is required for POST requests")
+          nil -> add_error(changeset, :post_data, "can't be blank")
+          "" -> add_error(changeset, :post_data, "can't be blank")
           _ -> changeset
         end
       _ -> changeset

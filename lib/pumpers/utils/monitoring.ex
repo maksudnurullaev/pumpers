@@ -6,12 +6,14 @@ defmodule Pumpers.Utils.Monitoring do
 
   # when is_struct(monitor, %Pumpers.Monitor{})
   def test_monitor(monitor) when is_struct(monitor, Pumpers.Monitors.Monitor) do
-    IO.puts("XXX: Monitor: #{inspect(monitor)}")
     case get_response(monitor) do
       {:ok, status_code, response_body} ->
-        IO.puts("XXX: response_body: #{inspect(response_body)}")
-        monitor_cs = Monitor.changeset(monitor, %{status_code: status_code, response: "#{inspect(response_body)}"})
-        IO.puts("XXX_CS: Monitor: #{inspect(monitor_cs)}")
+        monitor_cs =
+          Monitor.changeset(monitor, %{
+            status_code: status_code,
+            response: "#{inspect(response_body)}"
+          })
+
         Repo.update(monitor_cs)
 
       {:error, message} ->
