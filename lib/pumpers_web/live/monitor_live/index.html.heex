@@ -13,21 +13,22 @@
   </:actions>
 </.header>
 
-<.table id="monitors" rows={@streams.monitors}>
-  <:col :let={{_id, monitor}} label="#">
+<.table
+  id="monitors"
+  rows={@streams.monitors}
+  row_click={fn {_id, monitor} -> JS.navigate(~p"/monitors/#{monitor}/show") end}
+>
+  <:col :let={{id, monitor}} label="#">
     <.input
       type="checkbox"
       name="cb_group[]"
-      id={"cb_id_#{monitor.id}"}
+      id={"cb_id_#{id}"}
       phx-click={JS.push("cb_click", value: %{id: monitor.id})}
     />
   </:col>
   <:col :let={{_id, monitor}} label="Url">{monitor.url}</:col>
   <:col :let={{_id, monitor}} label="Method">{monitor.method}</:col>
   <:col :let={{_id, monitor}} label="Last status code">{monitor.status_code}</:col>
-  <:action :let={{_id, monitor}}>
-    <.link navigate={~p"/monitors/#{monitor}/show"}>Show</.link>
-  </:action>
   <:action :let={{_id, monitor}}>
     <.link patch={~p"/monitors/#{monitor}/edit"}>Edit</.link>
   </:action>

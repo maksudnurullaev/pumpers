@@ -36,6 +36,7 @@ defmodule PumpersWeb.MonitorLive.Index do
   end
 
   def handle_cb_click(%{"id" => id} = params, socket) do
+    IO.puts("XXX: #{inspect(params)}")
     socket = assign_new(socket, :checked_monitors, fn -> [] end)
 
     socket =

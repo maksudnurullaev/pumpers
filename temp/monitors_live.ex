@@ -7,6 +7,7 @@ defmodule PumpersWeb.MonitorsLive do
 
   def render(assigns) do
     ~H"""
+    <h1>Monitors - 1</h1>
     <%= case assigns.mode do %>
       <% :list -> %>
         <.monitor_list />

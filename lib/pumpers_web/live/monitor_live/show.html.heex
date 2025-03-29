@@ -11,10 +11,12 @@
   </:actions>
 </.header>
 
+<.back navigate={~p"/monitors"} class="my-5">Back to monitors</.back>
+
 <.list>
   <:item title="Url">{@monitor.url}</:item>
   <:item title="Method">{@monitor.method}</:item>
-  <:item :if={@monitor.method == :post } title="Post data">{@monitor.post_data}</:item>
+  <:item :if={@monitor.method == :post} title="Post data">{@monitor.post_data}</:item>
   <:item title="DEVIDE_R: Response" />
   <:item title="Code"><u>{@monitor.status_code}</u></:item>
   <:item title="Result">
@@ -30,7 +32,7 @@
   </:item>
 </.list>
 
-<.back navigate={~p"/monitors"}>Back to monitors</.back>
+<.back navigate={~p"/monitors"} class="my-5">Back to monitors</.back>
 
 <.modal
   :if={@live_action == :edit}
